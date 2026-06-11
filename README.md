@@ -18,58 +18,79 @@ Pineapple Social Manager è stato progettato per agenzie, freelance e aziende ch
 ### ⚙️ Impostazioni e Configurazione
 Pagina di gestione delle configurazioni dell’applicazione. La configurazione è **multi-tenant**, permette di configurare impostazioni globali (per tutti i tenant) o per singolo Cliente (tenant).
 
-*Immagini di riferimento (dal documento)*:
-*   `[Screen della Modalità globale]`
-*   `[Screen della Modalità Cliente]`
-
-*   **Account Instagram, Facebook e TikTok:** Associa i tuoi account Business tramite una procedura guidata passo-passo che configura l'accesso alle API dei rispettivi social. Per Instagram, configurando App ID e App Secret, il token viene rigenerato automaticamente.
-*   **Regole di Schedulazione Automatica:** Programma la frequenza di pubblicazione automatica, scegliendo giorni, orari, topic di generazione AI e associando un sito per l'estrazione dei contenuti.
-*   **Impostazioni Generali:** Configura fuso orario, lingua predefinita, tono comunicativo e l'abilitazione della pubblicazione automatica.
+* **Account Instagram, Facebook e TikTok:** Associa i tuoi account Business tramite una procedura guidata passo-passo che configura l'accesso alle API dei rispettivi social. Per Instagram, configurando App ID e App Secret, il token viene rigenerato automaticamente.
+* **Regole di Schedulazione Automatica:** Programma la frequenza di pubblicazione automatica, scegliendo giorni, orari, topic di generazione AI e associando un sito per l'estrazione dei contenuti.
+* **Impostazioni Generali:** Configura fuso orario, lingua predefinita, tono comunicativo e l'abilitazione della pubblicazione automatica.
 
 ### 🏢 Clienti e Piani
 Ogni cliente ha il proprio spazio isolato. Da questa sezione puoi gestire i clienti e assegnare loro specifici piani:
-*   **Free:** Funzionalità limitate.
-*   **Pro:** Funzionalità complete.
-*   **Agency:** Funzionalità complete e possibilità di creare nuovi clienti (sotto-tenant).
+* **Free:** Funzionalità limitate.
+* **Pro:** Funzionalità complete.
+* **Agency:** Funzionalità complete e possibilità di creare nuovi clienti (sotto-tenant).
 
 ### 👥 Utenti e Dipendenti
 Gestisci gli accessi ai vari tenant (clienti) con ruoli specifici:
-*   **Admin:** Gestione completa (tranne utenti master).
-*   **Editor:** Crea e modifica contenuti.
-*   **Viewer:** Solo visualizzazione.
+* **Admin:** Gestione completa (tranne utenti master).
+* **Editor:** Crea e modifica contenuti.
+* **Viewer:** Solo visualizzazione.
 
 ### 🤖 Provider AI Multi-Modello
 Configura tramite API Key i provider **Open AI**, **Claude (Anthropic)** o **Google Gemini/VEO**.
-*   **Personalizzazione:** Imposta limiti di token giornalieri e job simultanei massimi per cliente o globalmente.
-*   **Modelli Specializzati:** Assegna modelli specifici per testo, immagini (modello Immagini AI separato) e video (Modello Video AI separato).
-*   **Funzionalità Assegnate:** Scegli quali specifiche operazioni far eseguire a ciascun provider (se non impostato, il provider predefinito farà tutto).
+* **Personalizzazione:** Imposta limiti di token giornalieri e job simultanei massimi per cliente o globalmente.
+* **Modelli Specializzati:** Assegna modelli specifici per testo, immagini (modello Immagini AI separato) e video (Modello Video AI separato).
+* **Funzionalità Assegnate:** Scegli quali specifiche operazioni far eseguire a ciascun provider (se non impostato, il provider predefinito farà tutto).
 
 ### 🧠 Regole Prompt
 Le regole vengono iniettate automaticamente nel prompt di ogni generazione AI, con controllo granulare (priorità da Bassa a Critica).
-*   **Generazione Automatica:** Premi "Genera con AI" per estrarre automaticamente le regole e il "Tono di Voce" analizzando i contenuti dei siti web del cliente associato.
-*   **Gestione Manuale e Prompt Negativi:** Crea istruzioni manuali. Le regole "Negative" sono inviate come negative prompt ai provider che lo supportano (Imagen, Veo) e come istruzione "EVITA SEMPRE" per i modelli LLM.
-*   **Multi-tenancy:** Regole globali per tutti, o regole specifiche per cliente che sovrascrivono quelle globali.
+* **Generazione Automatica:** Premi "Genera con AI" per estrarre automaticamente le regole e il "Tono di Voce" analizzando i contenuti dei siti web del cliente associato.
+* **Gestione Manuale e Prompt Negativi:** Crea istruzioni manuali. Le regole "Negative" sono inviate come negative prompt ai provider che lo supportano (Imagen, Veo) e come istruzione "EVITA SEMPRE" per i modelli LLM.
+* **Multi-tenancy:** Regole globali per tutti, o regole specifiche per cliente che sovrascrivono quelle globali.
+
+![Regole Prompt](https://www.pineapplesolutions.it/images/regole-prompt.jpg)
 
 ### 🖼️ Media e Siti Collegati
-*   **Siti Collegati:** Associa gli URL ai clienti impostando settore e URL icona/Logo (se vuoto estrarrà la favicon in automatico). L'AI userà i contenuti in continua evoluzione del sito.
-*   **Libreria Media (Scraping):** 
-    *   **Estrazione Foto:** Estrae immagini dal sito, le persiste nello storage, genera descrizioni AI e le *ottimizza per il web* (compressione dimensioni fino al 40% a parità di qualità).
-    *   **Estrazione Video:** Estrae video, autogenera descrizioni e converte in H264/MP4 per compatibilità web.
-*   **Video AI (Google VEO):** Crea video da 5 a 60 secondi. Per video più lunghi di 8 secondi, l'AI genera più clip e le unisce con effetto continuo.
-    *   *Genera storyboard con AI:* L'AI crea scene con durate, narrazione, musica e genera l'audio vocale continuo (TTS).
-*   **Coda Generazione:** Monitora in tempo reale lo stato dei job. Dal singolo contenuto puoi effettuare modifiche, cambio modello, cambio durata o anteprima.
+* **Siti Collegati:** Associa gli URL ai clienti impostando settore e URL icona/Logo (se vuoto estrarrà la favicon in automatico). L'AI userà i contenuti in continua evoluzione del sito.
+* **Libreria Media (Scraping):** * **Estrazione Foto:** Estrae immagini dal sito, le persiste nello storage, genera descrizioni AI e le *ottimizza per il web* (compressione dimensioni fino al 40% a parità di qualità). I media attivi vengono forniti come contesto visivo all'AI durante la generazione.
+    * **Estrazione Video:** Estrae video, autogenera descrizioni e converte in H264/MP4 per compatibilità web.
+
+![Libreria Media](https://www.pineapplesolutions.it/images/libreria-media.jpg)
+
+### 🎬 Video AI (Generazione con Google VEO)
+Crea video da 5 a 60 secondi definendo stile, durata e formato (Portrait/Landscape). Per video più lunghi di 8 secondi, l'AI genera più clip e le unisce con effetto continuo.
+* *Genera storyboard con AI:* L'AI crea scene con durate, narrazione, musica e genera l'audio vocale continuo (TTS).
+
+**Form di Generazione:**
+![Video AI Form](https://www.pineapplesolutions.it/images/video-ai-form.jpg)
+
+**Coda di Generazione Unificata:**
+Monitora in tempo reale lo stato dei job. Dal singolo contenuto puoi effettuare modifiche, cambio modello, cambio durata o anteprima. Gestisce retry e priorità.
+![Coda Generazione Video](https://www.pineapplesolutions.it/images/coda-generazione.jpg)
+
+**Dettaglio Clip Generata:**
+![Video AI Dettaglio](https://www.pineapplesolutions.it/images/video-ai-dettaglio.jpg)
 
 ### ✍️ Content Studio (Contenuti)
 Consulta e genera i contenuti tramite i provider AI in tre modalità principali:
-1.  **Nuovo post (semi-assistita):** Seleziona piattaforma (Instagram/Facebook/TikTok), formato (Post, Story, Reel, Carousel), media di riferimento e impostazioni rimozione filigrana. Inserisci topic e stile: l'AI genera in automatico Caption, Hashtag e le scene dello storyboard (gestibili anche manualmente).
-2.  **AI Generator:** Automazione spinta a partire da un topic o da un’idea.
-3.  **Brainstorming:** Genera 10 contenuti casuali (post, story, reel, ecc.) per vari Social differenziati alla volta. Approvali singolarmente per inviarli in coda di generazione media (risparmiando token).
+
+**1. Nuovo post (semi-assistita):** Seleziona piattaforma (Instagram/Facebook/TikTok), formato (Post, Story, Reel, Carousel), media di riferimento e impostazioni rimozione filigrana. Inserisci topic e stile: l'AI genera in automatico Caption, Hashtag e le scene dello storyboard (gestibili anche manualmente).
+![Content Studio Editor](https://www.pineapplesolutions.it/images/content-studio-editor.jpg)
+
+**2. AI Generator:** Automazione spinta a partire da un topic o da un’idea.
+![AI Generator](https://www.pineapplesolutions.it/images/ai-generator.jpg)
+
+**3. Brainstorming:** Genera 10 idee di contenuti casuali (post, story, reel, ecc.) per vari Social differenziati alla volta. Approvali singolarmente per inviarli in coda di generazione media (risparmiando token).
+![Brainstorming AI](https://www.pineapplesolutions.it/images/brainstorming-ai.jpg)
+
 *Inoltre:* Migliora il contenuto tramite prompt migliorativo, modificalo manualmente, rigeneralo e pubblicalo.
 
 ### 📊 Analytics, Campagne e Dashboard
-*   **Analytics:** Filtra le statistiche per cliente e piattaforma. Attiva la *Sincronizzazione automatica* per ogni Social impostando la frequenza (CRON personalizzato o data/ora) o avviala manualmente tramite il tasto "Sync...".
-*   **Campagne:** Raggruppa i post per scopi specifici definendo data di inizio e fine. Il tasto "Crea campagna" permette all'AI di generare un'intera pianificazione e schedulazione.
-*   **Dashboard:** Pagina generale di monitoraggio statistiche, calendario editoriale e azioni rapide.
+* **Dashboard:** Pagina generale di monitoraggio statistiche, calendario editoriale e azioni rapide. Hai sempre sotto controllo i post schedulati, le bozze pendenti e le metriche chiave.
+  ![Dashboard Overview](https://www.pineapplesolutions.it/images/dashboard-overview.jpg)
+
+* **Analytics:** Filtra le statistiche per cliente e piattaforma. Attiva la *Sincronizzazione automatica* per ogni Social impostando la frequenza (CRON personalizzato o data/ora) o avviala manualmente tramite il tasto "Sync...".
+  ![Analytics Metrics](https://www.pineapplesolutions.it/images/analytics-metrics.jpg)
+
+* **Campagne:** Raggruppa i post per scopi specifici definendo data di inizio e fine. Il tasto "Crea campagna" permette all'AI di generare un'intera pianificazione e schedulazione.
 
 ### 🖥️ UI del Sito
 L’interfaccia è **Responsive**, ottimizzata per tutti i dispositivi, con **Tema Light e Dark** gestibile dalla barra di navigazione principale (da cui monitori anche lo scheduler e le notifiche). Il menù raggruppa le sezioni in Contenuti, Media e Impostazioni in modo logico e pulito.
@@ -862,6 +883,7 @@ Si prega di notare che il progetto è in fase di sviluppo attivo. Le seguenti fu
 
 * **Piani e Fatturazione (Multi-tenancy):** La gestione dei piani (Free, Pro, Agency), i limiti di token/job associati ai piani e la logica di limitazione dei tenant non sono ancora operativi.
 * **Ruoli e Permessi Utente:** Il sistema di controllo degli accessi basato su ruoli (`Admin`, `Editor`, `Viewer`) per i dipendenti e i sotto-tenant non è attualmente attivo; tutti gli utenti accedono con privilegi amministrativi sul tenant.
+* **Test e Integrazione Provider AI:** È necessario completare i test operativi e validare l'integrazione completa per i provider **Anthropic** e **OpenAI**.
 * **Provider AI Video (Google VEO):** La generazione video tramite Google VEO, la creazione automatica dello storyboard, l'unione delle clip e il sistema di Text-to-Speech (TTS) continuo sono in fase di sviluppo e non utilizzabili.
 * **Automazione Schedulazione (Siti Collegati):** L'estrazione automatica dei contenuti dai siti web per l'analisi del "Tono di Voce", il caricamento automatico delle regole e la pianificazione guidata tramite AI non sono ancora funzionanti.
 * **Sezione Campagne:** Il raggruppamento dei post in campagne con date di inizio/fine e la generazione automatica di un'intera pianificazione editoriale tramite AI non sono ancora implementati.
