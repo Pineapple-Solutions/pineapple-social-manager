@@ -1,0 +1,527 @@
+// prisma/schema.prisma
+// Database schema per Pineapple Social Manager — v2 (Multi-tenant)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── TENANT (Multi-tenancy) ─────────────────────────────────────
+model Tenant {
+  id          String   @id @default(cuid())
+  name        String   @db.VarChar(500)
+  slug        String   @unique @db.VarChar(191)
+  logoUrl     String?  @db.Text
+  plan        String   @default("free") @db.VarChar(50) // free | pro | agency
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users             User[]
+  userTenants       UserTenant[]
+  configs           TenantConfig[]
+  sites             ConnectedSite[]
+  posts             ScheduledPost[]
+  campaigns         Campaign[]
+  instagramAccounts InstagramAccount[]
+  facebookAccounts  FacebookAccount[]
+  tiktokAccounts    TikTokAccount[]
+  aiProviders       AIProviderConfig[]
+  schedulerRules    SchedulerRule[]
+  contentIdeas      ContentIdea[]
+  globalPromptRules GlobalPromptRule[]
+  videoJobs         VideoGenerationJob[]
+  mediaAssets       MediaAsset[]
+  generationJobs    GenerationJob[]
+}
+
+// ─── UTENTI / AUTENTICAZIONE ────────────────────────────────────
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique @db.VarChar(191)
+  password    String   @db.VarChar(255) // bcrypt hash
+  name        String   @db.VarChar(255)
+  role        String   @default("editor") @db.VarChar(50) // master | admin | editor | viewer
+  permissions String   @default("[]") @db.VarChar(5000) // JSON array di permessi
+  isActive    Boolean  @default(true)
+
+  // OTP / 2FA
+  otpEnabled  Boolean  @default(false)
+  otpSecret   String?  @db.VarChar(255) // TOTP secret (base32)
+
+  // Tenant primario (backward compat — tenant "di default" per la sessione)
+  tenantId    String?
+  tenant      Tenant?  @relation(fields: [tenantId], references: [id])
+
+  // Multi-tenant: tutti i clienti a cui il dipendente ha accesso
+  userTenants UserTenant[]
+
+  sessions    Session[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ─── USER ↔ TENANT (many-to-many) ──────────────────────────────
+model UserTenant {
+  id       String @id @default(cuid())
+  userId   String
+  tenantId String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, tenantId])
+}
+
+// ─── SESSIONI ───────────────────────────────────────────────────
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique @db.VarChar(512)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenantId  String?
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+// ─── CONFIG GLOBALE ─────────────────────────────────────────────
+model Config {
+  id        String   @id @default(cuid())
+  key       String   @unique @db.VarChar(191)
+  value     String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── CONFIG PER TENANT ──────────────────────────────────────────
+model TenantConfig {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  key       String
+  value     String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, key])
+}
+
+// ─── AI PROVIDER CONFIG ─────────────────────────────────────────
+model AIProviderConfig {
+  id           String   @id @default(cuid())
+  tenantId     String
+  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  provider     String   @db.VarChar(50)  // openai | anthropic | google
+  apiKey       String   @db.Text
+  model        String   @db.VarChar(100)
+  isActive     Boolean  @default(true)
+  isDefault    Boolean  @default(false)
+
+  maxTokensPerDay   Int      @default(100000)
+  tokensUsedToday   Int      @default(0)
+  tokenResetAt      DateTime?
+  maxConcurrentJobs Int      @default(3)
+
+  videoModel      String?  @db.VarChar(100)
+  videoEnabled    Boolean  @default(false)
+  imageModel      String?  @db.VarChar(100)
+  imageEnabled    Boolean  @default(false)
+  fallbackEnabled Boolean  @default(false)
+
+  // Funzionalità a cui è assegnato questo provider (JSON array)
+  // es: ["video","ideas","posts","ai-generator","scheduler","captions"]
+  // Array vuoto = provider generico (fallback per tutto)
+  usedFor         String   @default("[]") @db.VarChar(5000)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([tenantId, provider])
+}
+
+// ─── REGOLE PROMPT GLOBALI ───────────────────────────────────────
+model GlobalPromptRule {
+  id               String   @id @default(cuid())
+  tenantId         String?  // null = regola globale (per tutti i tenant)
+  tenant           Tenant?  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name             String   @db.VarChar(500)
+  description      String?  @db.Text
+  contentType      String   @default("ALL") @db.VarChar(50)
+  rule             String   @db.Text
+  isActive         Boolean  @default(true)
+  priority         Int      @default(0)
+  // Se true → la regola è un "negative prompt": viene inviata come negative prompt ai provider
+  // che lo supportano nativamente (Imagen, Veo) e come istruzione "EVITA" per i modelli LLM.
+  isNegativePrompt Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+// ─── VIDEO GENERATION JOBS ──────────────────────────────────────
+model VideoGenerationJob {
+  id          String   @id @default(cuid())
+  tenantId    String
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  prompt      String   @db.Text
+  aspectRatio String   @default("9:16") @db.VarChar(20) // 9:16 | 16:9 | 1:1
+  duration    Int      @default(5)
+  provider    String   @default("google") @db.VarChar(50) // google | openai | anthropic
+  style       String?  @db.Text
+  status      String   @default("PENDING") @db.VarChar(50)
+  // PENDING | PROCESSING | COMPLETED | FAILED | WAITING_TOKENS | CANCELLED
+  videoUrl    String?  @db.Text
+  thumbnailUrl String? @db.Text
+  errorMessage String? @db.Text
+  estimatedTokens    Int      @default(0)
+  tokensConsumed     Int      @default(0)
+  scheduledRetryAt   DateTime?
+  attempts           Int      @default(0)
+  maxAttempts        Int      @default(3)
+  relatedPostId  String?
+  notes          String?  @db.Text
+  // Nome operazione asincrona (Google Veo long-running operation) — usato per polling
+  operationName  String?  @db.Text
+  // Metadati stitching multi-clip (JSON): StitchingMeta — presente solo quando duration > 8s
+  stitchingMeta  String?  @db.Text
+  // Sito a cui appartiene il video generato — per organizzazione cartelle
+  siteId         String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ─── ACCOUNT FACEBOOK (Page) ────────────────────────────────────
+model FacebookAccount {
+  id             String   @id @default(cuid())
+  tenantId       String?
+  tenant         Tenant?  @relation(fields: [tenantId], references: [id])
+  pageId         String   @unique
+  pageName       String   @db.VarChar(500)
+  accessToken    String   @db.Text
+  profilePicture String?  @db.Text
+  followersCount Int      @default(0)
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  posts    ScheduledPost[]
+  metrics  FacebookMetrics[]
+}
+
+// ─── ACCOUNT TIKTOK ──────────────────────────────────────────────
+model TikTokAccount {
+  id             String   @id @default(cuid())
+  tenantId       String?
+  tenant         Tenant?  @relation(fields: [tenantId], references: [id])
+  openId         String   @unique
+  username       String   @db.VarChar(255)
+  displayName    String   @db.VarChar(500)
+  accessToken    String   @db.Text
+  refreshToken   String?  @db.Text
+  tokenExpiresAt DateTime?
+  avatarUrl      String?  @db.Text
+  followersCount Int      @default(0)
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  posts    ScheduledPost[]
+  metrics  TikTokMetrics[]
+}
+
+// ─── METRICHE FACEBOOK ───────────────────────────────────────────
+model FacebookMetrics {
+  id             String   @id @default(cuid())
+  date           DateTime @default(now())
+  followersCount Int      @default(0)
+  impressions    Int      @default(0)
+  reach          Int      @default(0)
+  pageViews      Int      @default(0)
+  engagementRate Float    @default(0)
+  reactions      Int      @default(0)
+  shares         Int      @default(0)
+  accountId      String
+  account        FacebookAccount @relation(fields: [accountId], references: [id])
+  createdAt      DateTime @default(now())
+}
+
+// ─── METRICHE TIKTOK ─────────────────────────────────────────────
+model TikTokMetrics {
+  id             String   @id @default(cuid())
+  date           DateTime @default(now())
+  followersCount Int      @default(0)
+  videoViews     Int      @default(0)
+  likes          Int      @default(0)
+  comments       Int      @default(0)
+  shares         Int      @default(0)
+  profileViews   Int      @default(0)
+  engagementRate Float    @default(0)
+  accountId      String
+  account        TikTokAccount @relation(fields: [accountId], references: [id])
+  createdAt      DateTime @default(now())
+}
+
+// ─── SITI COLLEGATI ─────────────────────────────────────────────
+model ConnectedSite {
+  id          String   @id @default(cuid())
+  tenantId    String?
+  tenant      Tenant?  @relation(fields: [tenantId], references: [id])
+  name        String   @db.VarChar(500)
+  url         String   @db.Text
+  description String?  @db.Text
+  logoUrl     String?  @db.Text
+  niche       String?  @db.VarChar(255)
+  language    String   @default("it") @db.VarChar(20)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  posts     ScheduledPost[]
+  campaigns Campaign[]
+}
+
+// ─── ACCOUNT INSTAGRAM ──────────────────────────────────────────
+model InstagramAccount {
+  id                String   @id @default(cuid())
+  tenantId          String?
+  tenant            Tenant?  @relation(fields: [tenantId], references: [id])
+  username          String   @db.VarChar(255)
+  businessAccountId String   @unique
+  accessToken       String   @db.Text
+  tokenExpiresAt    DateTime?
+  profilePicture    String?  @db.Text
+  followersCount    Int      @default(0)
+  postsCount        Int      @default(0)
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  posts     ScheduledPost[]
+  analytics InstagramMetrics[]
+}
+
+// ─── ACCOUNT FACEBOOK (Page) ────────────────────────────────────
+model ScheduledPost {
+  id          String   @id @default(cuid())
+  tenantId    String?
+  tenant      Tenant?  @relation(fields: [tenantId], references: [id])
+  platform    String   @default("INSTAGRAM") @db.VarChar(50) // INSTAGRAM | FACEBOOK | TIKTOK
+  type        String   @db.VarChar(50)
+  status      String   @default("DRAFT") @db.VarChar(50)
+  caption     String?  @db.Text
+  hashtags    String?  @db.Text
+  mediaUrls   String   @db.Text
+  mediaType   String   @default("IMAGE") @db.VarChar(50)
+  coverUrl    String?  @db.Text
+  aiGenerated Boolean  @default(false)
+  aiPrompt    String?  @db.Text
+  aiModel     String?  @db.VarChar(100)
+  // ── Stato generazione media ──────────────────────────────────────
+  // NONE      = nessun media richiesto (post solo testo)
+  // PENDING   = in attesa di generazione/upload
+  // GENERATING = job in coda in esecuzione
+  // READY     = media disponibile e verificato
+  // FAILED    = generazione fallita (retry possibile)
+  mediaReady  String   @default("PENDING") @db.VarChar(50) // NONE | PENDING | GENERATING | READY | FAILED
+  scheduledAt        DateTime?
+  publishedAt        DateTime?
+  instagramPostId    String?  @db.VarChar(255)
+  facebookPostId     String?  @db.VarChar(255)
+  tiktokPostId       String?  @db.VarChar(255)
+  likesCount    Int?
+  commentsCount Int?
+  reachCount    Int?
+  impressions   Int?
+  siteId      String?
+  site        ConnectedSite?   @relation(fields: [siteId], references: [id])
+  // Instagram account (nullable: non necessario per FB/TikTok)
+  accountId   String?
+  account     InstagramAccount? @relation(fields: [accountId], references: [id])
+  // Facebook account
+  facebookAccountId String?
+  facebookAccount   FacebookAccount? @relation(fields: [facebookAccountId], references: [id])
+  // TikTok account
+  tiktokAccountId   String?
+  tiktokAccount     TikTokAccount?   @relation(fields: [tiktokAccountId], references: [id])
+  campaignId  String?
+  campaign    Campaign?        @relation(fields: [campaignId], references: [id])
+  error       String?  @db.Text
+  retryCount  Int      @default(0)
+  notes       String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  generationJobs GenerationJob[]
+}
+
+// ─── CAMPAGNE ───────────────────────────────────────────────────
+model Campaign {
+  id          String   @id @default(cuid())
+  tenantId    String?
+  tenant      Tenant?  @relation(fields: [tenantId], references: [id])
+  name        String   @db.VarChar(500)
+  description String?  @db.Text
+  goal        String?  @db.Text
+  status      String   @default("ACTIVE") @db.VarChar(50)
+  startDate   DateTime?
+  endDate     DateTime?
+  siteId      String?
+  site        ConnectedSite? @relation(fields: [siteId], references: [id])
+  posts       ScheduledPost[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ─── SCHEDULER RULES ────────────────────────────────────────────
+model SchedulerRule {
+  id          String  @id @default(cuid())
+  tenantId    String?
+  tenant      Tenant? @relation(fields: [tenantId], references: [id])
+  name        String   @db.VarChar(500)
+  description String?  @db.Text
+  isActive    Boolean @default(true)
+  contentType   String  @default("MIXED") @db.VarChar(50)
+  frequency     String  @default("DAILY") @db.VarChar(50)
+  postsPerDay   Int     @default(1)
+  storiesPerDay Int     @default(0)
+  reelsPerWeek  Int     @default(0)
+  preferredTimes String @default("[]") @db.VarChar(5000)
+  timezone       String @default("Europe/Rome") @db.VarChar(100)
+  activeDays     String @default("[1,2,3,4,5,6,7]") @db.VarChar(100)
+  contentSource  String @default("AI") @db.VarChar(50)
+  siteUrl        String? @db.Text
+  aiTone         String @default("professional") @db.VarChar(100)
+  aiLanguage     String @default("it") @db.VarChar(20)
+  aiTopics       String @default("[]") @db.VarChar(10000)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── METRICHE INSTAGRAM ─────────────────────────────────────────
+model InstagramMetrics {
+  id          String   @id @default(cuid())
+  date        DateTime @default(now())
+  followersCount    Int @default(0)
+  followingCount    Int @default(0)
+  mediaCount        Int @default(0)
+  impressions       Int @default(0)
+  reach             Int @default(0)
+  profileViews      Int @default(0)
+  websiteClicks     Int @default(0)
+  engagementRate    Float @default(0)
+  avgLikes          Float @default(0)
+  avgComments       Float @default(0)
+  accountId   String
+  account     InstagramAccount @relation(fields: [accountId], references: [id])
+  createdAt   DateTime @default(now())
+}
+
+// ─── CONTENT IDEAS ──────────────────────────────────────────────
+model ContentIdea {
+  id          String  @id @default(cuid())
+  tenantId    String?
+  tenant      Tenant? @relation(fields: [tenantId], references: [id])
+  title       String   @db.VarChar(500)
+  description String?  @db.Text
+  type        String   @db.VarChar(50)
+  status      String   @default("PENDING") @db.VarChar(50)
+  aiGenerated Boolean @default(true)
+  caption     String?  @db.Text
+  hashtags    String?  @db.Text
+  imagePrompt String?  @db.Text
+  videoPrompt String?  @db.Text
+  category    String?  @db.VarChar(100)
+  priority    Int     @default(0)
+  scheduledFor DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ─── MEDIA ASSET LIBRARY ────────────────────────────────────────
+model MediaAsset {
+  id          String   @id @default(cuid())
+  tenantId    String
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name        String   @db.VarChar(500)
+  url         String   @db.Text
+  type        String   @default("IMAGE") @db.VarChar(50)  // IMAGE | VIDEO
+  mimeType    String?  @db.VarChar(100)
+  size        Int?     // bytes
+  width       Int?
+  height      Int?
+  alt         String?  @db.VarChar(500)
+  description String?  @db.Text
+  tags        String   @default("[]") @db.VarChar(5000)     // JSON array di tag
+  // Origine: MANUAL (caricato manualmente) | SITE_EXTRACTED (estratto da sito)
+  source      String   @default("MANUAL") @db.VarChar(50)
+  siteId      String?                     // sito da cui è stato estratto
+  // URL remoto originale (se il file è stato scaricato e salvato localmente)
+  // Serve per evitare re-importazioni duplicate quando url è già locale
+  originalUrl String?  @db.Text
+  usedInAI    Boolean  @default(true)     // incluso nel contesto AI
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ─── CODA DI GENERAZIONE CONTENUTI (globale: testo, immagini, video) ──────────
+// Unifica Video AI, Content Studio e qualsiasi altra sezione che usa API AI.
+// Il processore la legge ogni 5 min rispettando il budget token per tenant.
+model GenerationJob {
+  id            String   @id @default(cuid())
+  tenantId      String
+  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // Tipo di generazione
+  // TEXT       = solo testo (caption + hashtag) — già completato all'atto della creazione bozza
+  // IMAGE      = generazione immagine AI (es. DALL-E) a partire dall'aiPrompt del post
+  // VIDEO      = generazione video AI (come VideoGenerationJob, ma integrata)
+  // MANUAL     = posto in coda come promemoria che l'utente deve caricare il media
+  type          String   @default("IMAGE") @db.VarChar(50)  // TEXT | IMAGE | VIDEO | MANUAL
+
+  status        String   @default("PENDING") @db.VarChar(50)
+  // PENDING | PROCESSING | COMPLETED | FAILED | WAITING_TOKENS | CANCELLED | MANUAL_UPLOAD
+
+  // Post collegato (opzionale — un job può non avere post, es. generazione standalone)
+  relatedPostId String?
+  relatedPost   ScheduledPost? @relation(fields: [relatedPostId], references: [id], onDelete: SetNull)
+
+  // Parametri di generazione (JSON)
+  payload       String   @db.Text              // topic, tone, platform, prompt, ecc.
+  // Risultato (JSON): url immagine/video, caption generata, ecc.
+  result        String?  @db.Text
+
+  // Priorità: basata su scheduledAt del post (più vicino = più urgente)
+  priority      Int      @default(50)       // 0=massima urgenza, 100=bassa
+  scheduledFor  DateTime?                   // copiato da relatedPost.scheduledAt
+
+  errorMessage  String?  @db.Text
+  attempts      Int      @default(0)
+  maxAttempts   Int      @default(3)
+  nextRetryAt   DateTime?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// ─── AI GENERATION LOG ──────────────────────────────────────────
+model AIGenerationLog {
+  id          String   @id @default(cuid())
+  tenantId    String?
+  type        String   @db.VarChar(100)
+  provider    String   @default("openai") @db.VarChar(50)
+  model       String   @db.VarChar(100)
+  prompt      String   @db.Text
+  response    String   @db.Text
+  tokens      Int      @default(0)
+  durationMs  Int      @default(0)
+  success     Boolean  @default(true)
+  error       String?  @db.Text
+  createdAt   DateTime @default(now())
+}
