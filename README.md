@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo-pineapple-social-manager-h.svg" alt="Pineapple Social Manager Logo" width="600">
+  <img src="https://pineapplesolutions.it/images/logo-pineapple-social-manager-h.svg" alt="Pineapple Social Manager Logo" width="600">
 </p>
 
 # 🍍 Pineapple Social Manager
@@ -853,5 +853,26 @@ Se hai bisogno di **supporto premium, installazione dedicata o una licenza comme
 🍍 **Sostieni il Progetto:** Se questa piattaforma ti aiuta a scalare il tuo business, considera l'idea di fare una donazione per supportare lo sviluppo! 
 
 ---
+
+
+## ⚠️ Limitazioni, Stato dello Sviluppo e Responsabilità
+
+### 🛠️ Funzionalità Non Ancora Sviluppate (In Arrivo)
+Si prega di notare che il progetto è in fase di sviluppo attivo. Le seguenti funzionalità, sebbene documentate o visibili nell'interfaccia, **non sono ancora state implementate** e verranno rilasciate nelle prossime versioni:
+
+* **Piani e Fatturazione (Multi-tenancy):** La gestione dei piani (Free, Pro, Agency), i limiti di token/job associati ai piani e la logica di limitazione dei tenant non sono ancora operativi.
+* **Ruoli e Permessi Utente:** Il sistema di controllo degli accessi basato su ruoli (`Admin`, `Editor`, `Viewer`) per i dipendenti e i sotto-tenant non è attualmente attivo; tutti gli utenti accedono con privilegi amministrativi sul tenant.
+* **Provider AI Video (Google VEO):** La generazione video tramite Google VEO, la creazione automatica dello storyboard, l'unione delle clip e il sistema di Text-to-Speech (TTS) continuo sono in fase di sviluppo e non utilizzabili.
+* **Automazione Schedulazione (Siti Collegati):** L'estrazione automatica dei contenuti dai siti web per l'analisi del "Tono di Voce", il caricamento automatico delle regole e la pianificazione guidata tramite AI non sono ancora funzionanti.
+* **Sezione Campagne:** Il raggruppamento dei post in campagne con date di inizio/fine e la generazione automatica di un'intera pianificazione editoriale tramite AI non sono ancora implementati.
+* **Sincronizzazione Automatizzata Analytics:** La sincronizzazione automatica dei dati statistici tramite CRON personalizzato o schedulato non è attiva; i dati metrici non vengono popolati.
+* **Rimozione Filigrana (Watermark):** La funzionalità di rimozione automatica della filigrana dai media non è al momento disponibile.
+* **Supporto Multi-lingua:** L'interfaccia e il sistema sono attualmente disponibili **esclusivamente in lingua Italiana**. Il supporto per l'internazionalizzazione (i18n) e la localizzazione in altre lingue verrà aggiunto in futuro.
+
+### 🛑 Esclusione di Responsabilità (Disclaimer)
+Questo software viene fornito "così com'è", senza garanzie di alcun tipo, espresse o implicite.
+
+* L'autore (Giovanni Buglione) e *Pineapple Solutions di Buglione Giovanni* **non si assumono alcuna responsabilità** per l'uso improprio o illegale del programma, né per eventuali violazioni dei Termini di Servizio delle piattaforme social (Meta/Facebook, Instagram, TikTok) causate dall'uso di automatismi, scraping o pubblicazione massiva.
+* L'utente è l'unico responsabile della custodia delle API Key dei provider AI (OpenAI, Anthropic, Google) e dei costi da esse derivanti, nonché della gestione e della sicurezza dei dati dei propri clienti (tenant).
 
 *Pineapple IT Solutions di Buglione Giovanni — [pineapplesolutions.it](https://pineapplesolutions.it)*
