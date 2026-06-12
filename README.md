@@ -4,131 +4,163 @@
 
 # 🍍 Pineapple Social Manager
 
-> Piattaforma **multi-tenant** di gestione e automazione dei social media.  
-> Realizzata con **Next.js 15**, **TypeScript**, **Tailwind CSS**, **Prisma ORM** + **MySQL**.  
-> Supporta generazione contenuti AI (OpenAI, Anthropic, Google Gemini), scheduling automatico,  
-> pubblicazione su Instagram, Facebook e TikTok, media library, analisi e molto altro.
+> **Multi-tenant** social media management and automation platform.
+> Built with **Next.js 15**, **TypeScript**, **Tailwind CSS**, **Prisma ORM** + **MySQL**.
+> Supports AI content generation (OpenAI, Anthropic, Google Gemini), automatic scheduling,
+> publishing to Instagram, Facebook, and TikTok, media library management, analytics, and much more.
 
 ---
 
-## 🚀 Funzionalità Principali e Guida all'Uso
+## 🚀 Main Features and User Guide
 
-Pineapple Social Manager è stato progettato per agenzie, freelance e aziende che vogliono scalare la gestione dei social media sfruttando l'Intelligenza Artificiale. Di seguito il dettaglio di tutte le sezioni e funzionalità della piattaforma, come documentato.
+Pineapple Social Manager has been designed for agencies, freelancers, and businesses that want to scale social media management through Artificial Intelligence. Below is a detailed overview of all platform sections and features, as documented.
 
-### ⚙️ Impostazioni e Configurazione
-Pagina di gestione delle configurazioni dell’applicazione. La configurazione è **multi-tenant**, permette di configurare impostazioni globali (per tutti i tenant) o per singolo Cliente (tenant).
+### ⚙️ Settings and Configuration
 
-* **Account Instagram, Facebook e TikTok:** Associa i tuoi account Business tramite una procedura guidata passo-passo che configura l'accesso alle API dei rispettivi social. Per Instagram, configurando App ID e App Secret, il token viene rigenerato automaticamente.
-* **Regole di Schedulazione Automatica:** Programma la frequenza di pubblicazione automatica, scegliendo giorni, orari, topic di generazione AI e associando un sito per l'estrazione dei contenuti.
-* **Impostazioni Generali:** Configura fuso orario, lingua predefinita, tono comunicativo e l'abilitazione della pubblicazione automatica.
+Application configuration management page. Configuration is **multi-tenant**, allowing both global settings (for all tenants) and tenant-specific settings.
 
-### 🏢 Clienti e Piani
-Ogni cliente ha il proprio spazio isolato. Da questa sezione puoi gestire i clienti e assegnare loro specifici piani:
-* **Free:** Funzionalità limitate.
-* **Pro:** Funzionalità complete.
-* **Agency:** Funzionalità complete e possibilità di creare nuovi clienti (sotto-tenant).
+* **Instagram, Facebook, and TikTok Accounts:** Connect your Business accounts through a step-by-step wizard that configures access to the respective social platform APIs. For Instagram, after configuring the App ID and App Secret, the token is automatically regenerated.
+* **Automatic Scheduling Rules:** Configure automatic publishing frequency by selecting days, times, AI generation topics, and associating a website for content extraction.
+* **General Settings:** Configure timezone, default language, communication tone, and automatic publishing enablement.
 
-### 👥 Utenti e Dipendenti
-Gestisci gli accessi ai vari tenant (clienti) con ruoli specifici:
-* **Admin:** Gestione completa (tranne utenti master).
-* **Editor:** Crea e modifica contenuti.
-* **Viewer:** Solo visualizzazione.
+### 🏢 Clients and Plans
 
-### 🤖 Provider AI Multi-Modello
-Configura tramite API Key i provider **Open AI**, **Claude (Anthropic)** o **Google Gemini/VEO**.
-* **Personalizzazione:** Imposta limiti di token giornalieri e job simultanei massimi per cliente o globalmente.
-* **Modelli Specializzati:** Assegna modelli specifici per testo, immagini (modello Immagini AI separato) e video (Modello Video AI separato).
-* **Funzionalità Assegnate:** Scegli quali specifiche operazioni far eseguire a ciascun provider (se non impostato, il provider predefinito farà tutto).
+Each client has its own isolated workspace. From this section, you can manage clients and assign specific plans:
 
-### 🧠 Regole Prompt
-Le regole vengono iniettate automaticamente nel prompt di ogni generazione AI, con controllo granulare (priorità da Bassa a Critica).
-* **Generazione Automatica:** Premi "Genera con AI" per estrarre automaticamente le regole e il "Tono di Voce" analizzando i contenuti dei siti web del cliente associato.
-* **Gestione Manuale e Prompt Negativi:** Crea istruzioni manuali. Le regole "Negative" sono inviate come negative prompt ai provider che lo supportano (Imagen, Veo) e come istruzione "EVITA SEMPRE" per i modelli LLM.
-* **Multi-tenancy:** Regole globali per tutti, o regole specifiche per cliente che sovrascrivono quelle globali.
+* **Free:** Limited functionality.
+* **Pro:** Full functionality.
+* **Agency:** Full functionality plus the ability to create new clients (sub-tenants).
 
-![Regole Prompt](https://www.pineapplesolutions.it/images/regole-prompt.jpg)
+### 👥 Users and Employees
 
-### 🖼️ Media e Siti Collegati
-* **Siti Collegati:** Associa gli URL ai clienti impostando settore e URL icona/Logo (se vuoto estrarrà la favicon in automatico). L'AI userà i contenuti in continua evoluzione del sito.
-* **Libreria Media (Scraping):** * **Estrazione Foto:** Estrae immagini dal sito, le persiste nello storage, genera descrizioni AI e le *ottimizza per il web* (compressione dimensioni fino al 40% a parità di qualità). I media attivi vengono forniti come contesto visivo all'AI durante la generazione.
-    * **Estrazione Video:** Estrae video, autogenera descrizioni e converte in H264/MP4 per compatibilità web.
+Manage access to different tenants (clients) with specific roles:
 
-![Libreria Media](https://www.pineapplesolutions.it/images/libreria-media.jpg)
+* **Admin:** Full management (except master users).
+* **Editor:** Create and edit content.
+* **Viewer:** Read-only access.
 
-### 🎬 Video AI (Generazione con Google VEO)
-Crea video da 5 a 60 secondi definendo stile, durata e formato (Portrait/Landscape). Per video più lunghi di 8 secondi, l'AI genera più clip e le unisce con effetto continuo.
-* *Genera storyboard con AI:* L'AI crea scene con durate, narrazione, musica e genera l'audio vocale continuo (TTS).
+### 🤖 Multi-Model AI Providers
 
-**Form di Generazione:**
-![Video AI Form](https://www.pineapplesolutions.it/images/video-ai-form.jpg)
+Configure **OpenAI**, **Claude (Anthropic)**, or **Google Gemini/VEO** providers using API keys.
 
-**Coda di Generazione Unificata:**
-Monitora in tempo reale lo stato dei job. Dal singolo contenuto puoi effettuare modifiche, cambio modello, cambio durata o anteprima. Gestisce retry e priorità.
-![Coda Generazione Video](https://www.pineapplesolutions.it/images/coda-generazione.jpg)
+* **Customization:** Set daily token limits and maximum simultaneous jobs globally or per client.
+* **Specialized Models:** Assign specific models for text, images (dedicated AI Image model), and videos (dedicated AI Video model).
+* **Assigned Features:** Choose which specific operations each provider should handle (if not configured, the default provider will manage all tasks).
 
-**Dettaglio Clip Generata:**
-![Video AI Dettaglio](https://www.pineapplesolutions.it/images/video-ai-dettaglio.jpg)
+### 🧠 Prompt Rules
 
-### ✍️ Content Studio (Contenuti)
-Consulta e genera i contenuti tramite i provider AI in tre modalità principali:
+Rules are automatically injected into every AI generation prompt, with granular control (priority levels from Low to Critical).
 
-**1. Nuovo post (semi-assistita):** Seleziona piattaforma (Instagram/Facebook/TikTok), formato (Post, Story, Reel, Carousel), media di riferimento e impostazioni rimozione filigrana. Inserisci topic e stile: l'AI genera in automatico Caption, Hashtag e le scene dello storyboard (gestibili anche manualmente).
+* **Automatic Generation:** Click "Generate with AI" to automatically extract rules and the "Tone of Voice" by analyzing the contents of the associated client websites.
+* **Manual Management and Negative Prompts:** Create custom instructions manually. "Negative" rules are sent as negative prompts to supported providers (Imagen, Veo) and as "ALWAYS AVOID" instructions for LLM models.
+* **Multi-tenancy:** Define global rules for all tenants or client-specific rules that override global ones.
+
+![Prompt Rules](https://www.pineapplesolutions.it/images/regole-prompt.jpg)
+
+### 🖼️ Media and Connected Websites
+
+* **Connected Websites:** Associate URLs with clients by configuring business sector and icon/logo URL (if left empty, the favicon is automatically extracted). The AI uses the constantly evolving website content as a knowledge source.
+* **Media Library (Scraping):**
+
+  * **Photo Extraction:** Extracts images from websites, stores them, generates AI descriptions, and *optimizes them for the web* (up to 40% size reduction while maintaining quality). Active media are provided as visual context to the AI during content generation.
+  * **Video Extraction:** Extracts videos, automatically generates descriptions, and converts them to H264/MP4 for web compatibility.
+
+![Media Library](https://www.pineapplesolutions.it/images/libreria-media.jpg)
+
+### 🎬 AI Video (Google VEO Generation)
+
+Create videos from 5 to 60 seconds by defining style, duration, and format (Portrait/Landscape). For videos longer than 8 seconds, the AI generates multiple clips and merges them seamlessly into a continuous sequence.
+
+*Generate storyboard with AI:* The AI creates scenes with durations, narration, music, and generates continuous voice-over audio (TTS).
+
+**Generation Form:**
+
+![AI Video Form](https://www.pineapplesolutions.it/images/video-ai-form.jpg)
+
+**Unified Generation Queue:**
+
+Monitor job status in real time. From each content item, you can edit settings, change models, adjust duration, or preview the result. Supports retries and priorities.
+
+![Video Generation Queue](https://www.pineapplesolutions.it/images/coda-generazione.jpg)
+
+**Generated Clip Details:**
+
+![AI Video Details](https://www.pineapplesolutions.it/images/video-ai-dettaglio.jpg)
+
+### ✍️ Content Studio
+
+Browse and generate content through AI providers using three main modes:
+
+**1. New Post (Semi-Assisted):** Select platform (Instagram/Facebook/TikTok), format (Post, Story, Reel, Carousel), reference media, and watermark removal options. Enter a topic and style, and the AI automatically generates captions, hashtags, and storyboard scenes (which can also be edited manually).
+
 ![Content Studio Editor](https://www.pineapplesolutions.it/images/content-studio-editor.jpg)
 
-**2. AI Generator:** Automazione spinta a partire da un topic o da un’idea.
+**2. AI Generator:** Advanced automation starting from a topic or idea.
+
 ![AI Generator](https://www.pineapplesolutions.it/images/ai-generator.jpg)
 
-**3. Brainstorming:** Genera 10 idee di contenuti casuali (post, story, reel, ecc.) per vari Social differenziati alla volta. Approvali singolarmente per inviarli in coda di generazione media (risparmiando token).
-![Brainstorming AI](https://www.pineapplesolutions.it/images/brainstorming-ai.jpg)
+**3. Brainstorming:** Generate 10 random content ideas (posts, stories, reels, etc.) for multiple social platforms at once. Approve them individually and send them to the media generation queue, saving AI tokens.
 
-*Inoltre:* Migliora il contenuto tramite prompt migliorativo, modificalo manualmente, rigeneralo e pubblicalo.
+![AI Brainstorming](https://www.pineapplesolutions.it/images/brainstorming-ai.jpg)
 
-### 📊 Analytics, Campagne e Dashboard
-* **Dashboard:** Pagina generale di monitoraggio statistiche, calendario editoriale e azioni rapide. Hai sempre sotto controllo i post schedulati, le bozze pendenti e le metriche chiave.
+*Additionally:* Improve content using enhancement prompts, edit it manually, regenerate it, and publish it.
+
+### 📊 Analytics, Campaigns, and Dashboard
+
+* **Dashboard:** Central monitoring page with statistics, editorial calendar, and quick actions. Keep track of scheduled posts, pending drafts, and key metrics at all times.
+
   ![Dashboard Overview](https://www.pineapplesolutions.it/images/dashboard-overview.jpg)
 
-* **Analytics:** Filtra le statistiche per cliente e piattaforma. Attiva la *Sincronizzazione automatica* per ogni Social impostando la frequenza (CRON personalizzato o data/ora) o avviala manualmente tramite il tasto "Sync...".
+* **Analytics:** Filter statistics by client and platform. Enable *Automatic Synchronization* for each social platform by configuring a frequency (custom CRON or date/time) or start it manually using the "Sync..." button.
+
   ![Analytics Metrics](https://www.pineapplesolutions.it/images/analytics-metrics.jpg)
 
-* **Campagne:** Raggruppa i post per scopi specifici definendo data di inizio e fine. Il tasto "Crea campagna" permette all'AI di generare un'intera pianificazione e schedulazione.
+* **Campaigns:** Group posts by specific objectives, defining start and end dates. The "Create Campaign" button allows the AI to generate an entire content strategy and scheduling plan.
 
-### 🖥️ UI del Sito
-L’interfaccia è **Responsive**, ottimizzata per tutti i dispositivi, con **Tema Light e Dark** gestibile dalla barra di navigazione principale (da cui monitori anche lo scheduler e le notifiche). Il menù raggruppa le sezioni in Contenuti, Media e Impostazioni in modo logico e pulito.
+### 🖥️ User Interface
 
----
-
-## Indice Documentazione Tecnica
-
-1. [Modalità di utilizzo](#1-modalità-di-utilizzo)
-2. [Prerequisiti comuni](#2-prerequisiti-comuni)
-3. [Configurazione ambiente (.env.local)](#3-configurazione-ambiente-envlocal)
-4. [Database MySQL — setup](#4-database-mysql--setup)
-5. [Comandi Prisma (gestione DB)](#5-comandi-prisma-gestione-db)
-6. [Installazione nativa su Ubuntu Server](#6-installazione-nativa-su-ubuntu-server)
-7. [Installazione con Docker](#7-installazione-con-docker)
-8. [Installazione con Docker Compose (consigliata)](#8-installazione-con-docker-compose-consigliata)
-9. [Reverse proxy con Nginx](#9-reverse-proxy-con-nginx)
-10. [Certificato SSL con Certbot](#10-certificato-ssl-con-certbot)
-11. [Variabili d'ambiente — riferimento completo](#11-variabili-dambiente--riferimento-completo)
-12. [Aggiornamenti](#12-aggiornamenti)
-13. [Stack tecnico](#13-stack-tecnico)
-14. [Licenza e Supporto](#14-licenza-e-supporto)
+The interface is fully **Responsive**, optimized for all devices, and includes **Light and Dark Themes** that can be switched from the main navigation bar (which also provides scheduler and notification monitoring). The menu logically organizes sections into Content, Media, and Settings for a clean and intuitive experience.
 
 ---
 
-## 1. Modalità di utilizzo
+## Technical Documentation Index
 
-L'app è progettata per funzionare in due scenari principali:
-
-### 🌐 SaaS / Service condiviso (multi-tenant)
-Gestito da Pineapple Solutions su infrastruttura propria. I clienti accedono come **tenant** distinti sullo stesso server condiviso. Ogni tenant ha i propri account social, provider AI, regole di scheduling e media library completamente isolati. Richiede MySQL su un server dedicato o managed (RDS, PlanetScale, ecc.).
-
-### 🖥️ Installazione on-premise (cliente singolo)
-Il cliente installa l'app sul proprio server (direttamente su Ubuntu, via Docker o Kubernetes). In questo caso si consiglia comunque MySQL (non SQLite) per robustezza, anche con un singolo tenant. MySQL può girare in un container Docker insieme all'app tramite Docker Compose.
+1. [Usage Modes](#1-usage-modes)
+2. [Common Prerequisites](#2-common-prerequisites)
+3. [Environment Configuration (.env.local)](#3-environment-configuration-envlocal)
+4. [MySQL Database — Setup](#4-mysql-database--setup)
+5. [Prisma Commands (Database Management)](#5-prisma-commands-database-management)
+6. [Native Installation on Ubuntu Server](#6-native-installation-on-ubuntu-server)
+7. [Docker Installation](#7-docker-installation)
+8. [Docker Compose Installation (Recommended)](#8-docker-compose-installation-recommended)
+9. [Nginx Reverse Proxy](#9-nginx-reverse-proxy)
+10. [SSL Certificate with Certbot](#10-ssl-certificate-with-certbot)
+11. [Environment Variables — Complete Reference](#11-environment-variables--complete-reference)
+12. [Updates](#12-updates)
+13. [Technology Stack](#13-technology-stack)
+14. [License and Support](#14-license-and-support)
 
 ---
 
-## 2. Prerequisiti comuni
+
+
+
+
+## 1. Usage Modes
+
+The application is designed to operate in two primary scenarios:
+
+### 🌐 SaaS / Shared Service (Multi-Tenant)
+
+Managed by Pineapple Solutions on its own infrastructure. Customers access the platform as distinct **tenants** on the same shared server. Each tenant has completely isolated social accounts, AI providers, scheduling rules, and media libraries. Requires MySQL on a dedicated or managed server (RDS, PlanetScale, etc.).
+
+### 🖥️ On-Premise Installation (Single Customer)
+
+The customer installs the application on their own server (directly on Ubuntu, via Docker, or Kubernetes). In this scenario, MySQL (instead of SQLite) is still recommended for greater reliability, even with a single tenant. MySQL can run inside a Docker container alongside the application using Docker Compose.
+
+---
+
+## 2. Common Prerequisites
 
 ### Ubuntu Server 22.04 / 24.04 LTS
 
@@ -137,274 +169,303 @@ sudo apt update && sudo apt upgrade -y
 sudo apt install -y git curl wget unzip
 ```
 
-### Clonare il repository
+### Clone the Repository
 
 ```bash
-git clone https://github.com/tuo-org/pineapple-social-manager.git
+git clone https://github.com/your-org/pineapple-social-manager.git
 cd pineapple-social-manager
 ```
 
 ---
 
-## 3. Configurazione ambiente (.env.local)
+## 3. Environment Configuration (.env.local)
 
-Copia il file di esempio e compila i valori reali **prima** di avviare qualsiasi build:
+Copy the example file and fill in the real values **before** starting any build:
 
 ```bash
 cp .env.example .env.local
 nano .env.local
 ```
 
-Contenuto minimo richiesto:
+Minimum required content:
 
 ```env
-# --- Database MySQL ---
-DATABASE_URL="mysql://UTENTE:PASSWORD@localhost:3306/pineapple_social_manager"
+# --- MySQL Database ---
+DATABASE_URL="mysql://USER:PASSWORD@localhost:3306/pineapple_social_manager"
 
 # --- Auth ---
-AUTH_SECRET=scegli-una-stringa-casuale-lunga-almeno-32-caratteri
-MASTER_EMAIL=admin@tuodominio.it
-MASTER_PASSWORD=CambiamiSubito123!
+AUTH_SECRET=choose-a-random-string-at-least-32-characters-long
+MASTER_EMAIL=admin@yourdomain.com
+MASTER_PASSWORD=ChangeMeImmediately123!
 
 # --- Timezone ---
 TZ=Europe/Rome
 ```
 
-> ⚠️ Non aggiungere mai `.env.local` a Git. È già incluso nel `.gitignore`.  
-> ⚠️ I caratteri speciali nella password MySQL (es. `@`, `+`, `#`) devono essere **URL-encoded** nel `DATABASE_URL`.  
-> Esempio: `@` → `%40`, `+` → `%2B`, `#` → `%23`.
+> ⚠️ Never add `.env.local` to Git. It is already included in `.gitignore`.
+> ⚠️ Special characters in the MySQL password (e.g. `@`, `+`, `#`) must be **URL-encoded** inside the `DATABASE_URL`.
+> Example: `@` → `%40`, `+` → `%2B`, `#` → `%23`.
 
 ---
 
-## 4. Database MySQL — setup
+## 4. MySQL Database — Setup
 
-L'app usa **MySQL 8+** (oppure **MariaDB 10.6+**) come database.
+The application uses **MySQL 8+** (or **MariaDB 10.6+**) as its database.
 
-### 4.1 Installazione MySQL nativa (Ubuntu)
+### 4.1 Native MySQL Installation (Ubuntu)
 
 ```bash
 sudo apt install -y mysql-server
 sudo mysql_secure_installation
 ```
 
-### 4.2 Creazione database e utente dedicato
+### 4.2 Create Database and Dedicated User
 
 ```sql
--- Accedi come root
+-- Login as root
 sudo mysql -u root -p
 
--- Crea il database
+-- Create database
 CREATE DATABASE pineapple_social_manager CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- Crea l'utente dedicato
-CREATE USER 'pineapple_social_manager'@'localhost' IDENTIFIED BY 'password_sicura';
+-- Create dedicated user
+CREATE USER 'pineapple_social_manager'@'localhost' IDENTIFIED BY 'secure_password';
 
--- Assegna i permessi
+-- Grant permissions
 GRANT ALL PRIVILEGES ON pineapple_social_manager.* TO 'pineapple_social_manager'@'localhost';
 FLUSH PRIVILEGES;
 EXIT;
 ```
 
-> Per installazioni Docker Compose il database MySQL è incluso nel `docker-compose.yml` e si autoconfigura — vedi sezione 8.
+> For Docker Compose installations, the MySQL database is included in `docker-compose.yml` and is automatically configured — see Section 8.
 
-### 4.3 Prima inizializzazione schema
+### 4.3 Initial Schema Initialization
 
-Dopo aver compilato `.env.local` con la `DATABASE_URL` corretta:
+After filling in `.env.local` with the correct `DATABASE_URL`:
 
 ```bash
 npm run db:push
 ```
 
-Questo comando legge `prisma/schema.prisma` e crea tutte le tabelle nel database.  
-Per ambienti di produzione con migrazioni tracciate usare invece `npm run db:migrate`.
+This command reads `prisma/schema.prisma` and creates all database tables.
 
-### 4.4 Migrazione da SQLite (se si parte da un'installazione esistente)
+For production environments using tracked migrations, use:
 
-Se hai dati su un vecchio database SQLite (`prisma/prisma/social-manager.db`), puoi migrarli automaticamente:
+```bash
+npm run db:migrate
+```
+
+### 4.4 Migration from SQLite (If Migrating an Existing Installation)
+
+If you already have data stored in an old SQLite database (`prisma/prisma/social-manager.db`), you can migrate it automatically:
 
 ```bash
 npm run db:migrate-from-sqlite
 ```
 
-Lo script trasferisce tutti i record mantenendo le relazioni intatte (upsert idempotente).
+The script transfers all records while preserving relationships (idempotent upsert).
 
 ---
 
-## 5. Comandi Prisma (gestione DB)
+## 5. Prisma Commands (Database Management)
 
-| Comando | Descrizione |
-|---|---|
-| `npm run db:generate` | Rigenera il Prisma Client (dopo modifiche allo schema) |
-| `npm run db:push` | Applica lo schema al DB senza creare migration files (dev/staging) |
-| `npm run db:migrate` | Crea e applica una migration tracciata (produzione) |
-| `npm run db:studio` | Apre Prisma Studio — GUI web per esplorare/modificare i dati |
-| `npm run db:seed` | Popola il DB con dati iniziali (admin, tenant demo, prompt rules) |
-| `npm run db:migrate-from-sqlite` | Migra tutti i dati da SQLite a MySQL |
-| `sudo npm run fix-permissions` | Ricrea e corregge i permessi delle cartelle runtime (`public/uploads`, `public/watermark-removed`) |
+| Command                          | Description                                                                                            |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `npm run db:generate`            | Regenerates the Prisma Client (after schema changes)                                                   |
+| `npm run db:push`                | Applies the schema to the database without creating migration files (dev/staging)                      |
+| `npm run db:migrate`             | Creates and applies a tracked migration (production)                                                   |
+| `npm run db:studio`              | Opens Prisma Studio — web GUI for exploring and editing data                                           |
+| `npm run db:seed`                | Populates the database with initial data (admin, demo tenant, prompt rules)                            |
+| `npm run db:migrate-from-sqlite` | Migrates all data from SQLite to MySQL                                                                 |
+| `sudo npm run fix-permissions`   | Recreates and fixes permissions for runtime directories (`public/uploads`, `public/watermark-removed`) |
 
-> Tutti i comandi Prisma leggono automaticamente le variabili da `.env.local`.
+> All Prisma commands automatically read variables from `.env.local`.
 
 ---
 
-## 6. Installazione nativa su Ubuntu Server
+## 6. Native Installation on Ubuntu Server
 
-### 6.1 Installa Node.js 20 LTS
+### 6.1 Install Node.js 20 LTS
 
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt install -y nodejs
-node -v   # deve essere v20.x.x
+node -v   # should be v20.x.x
 npm -v
 ```
 
-### 6.2 Permessi consigliati
+### 6.2 Recommended Permissions
 
-Per sicurezza, esegui l'app con un utente dedicato (es. `pineapple`) e non come `root`.
+For security reasons, run the application using a dedicated user (e.g. `pineapple`) instead of `root`.
 
-> ⚠️ **Nota importante sul `.gitignore`:** l'intera cartella `public/` è esclusa da Git.
-> Questo significa che **non esiste sul server dopo un clone o un `git pull`**.
-> Le cartelle `public/uploads/` e `public/watermark-removed/` devono essere create manualmente
-> e la loro proprietà assegnata all'utente che esegue l'app, altrimenti la generazione media
-> (estrazione foto/video, AI, ecc.) fallirà silenziosamente.
+> ⚠️ **Important note about `.gitignore`:** the entire `public/` directory is excluded from Git.
+>
+> This means it **does not exist on the server after a clone or `git pull`**.
+>
+> The directories `public/uploads/` and `public/watermark-removed/` must be created manually and ownership assigned to the user running the application. Otherwise, media generation (photo/video extraction, AI processing, etc.) will fail silently.
 
 ```bash
-# Crea utente di servizio senza login shell
+# Create service user without login shell
 sudo adduser --system --group --home /var/www/pineapple-social-manager --shell /usr/sbin/nologin pineapple
 
-# Crea directory progetto e assegna proprietà
+# Create project directory and assign ownership
 sudo mkdir -p /var/www/pineapple-social-manager
 sudo chown -R pineapple:pineapple /var/www/pineapple-social-manager
 
-# Crea le cartelle runtime (non tracciate da git) e assegna permessi
-sudo mkdir -p /var/www/pineapple-social-manager/public/uploads/media-library               /var/www/pineapple-social-manager/public/uploads/video-ai               /var/www/pineapple-social-manager/public/uploads/content-studio               /var/www/pineapple-social-manager/public/watermark-removed
+# Create runtime directories (not tracked by Git) and assign permissions
+sudo mkdir -p /var/www/pineapple-social-manager/public/uploads/media-library \
+               /var/www/pineapple-social-manager/public/uploads/video-ai \
+               /var/www/pineapple-social-manager/public/uploads/content-studio \
+               /var/www/pineapple-social-manager/public/watermark-removed
 
 sudo chown -R pineapple:pineapple /var/www/pineapple-social-manager/public
 sudo chmod -R 755 /var/www/pineapple-social-manager/public
 
-# Permessi cartella build Next.js
+# Permissions for Next.js build directory
 sudo mkdir -p /var/www/pineapple-social-manager/.next
 sudo chown -R pineapple:pineapple /var/www/pineapple-social-manager/.next
 sudo chmod 750 /var/www/pineapple-social-manager/.next
 
-# Proteggi il file con i segreti
+# Protect the secrets file
 sudo chmod 640 /var/www/pineapple-social-manager/.env.local
 ```
 
-> 💡 In alternativa puoi usare lo script incluso (dopo il clone):
+> 💡 Alternatively, you can use the included script (after cloning):
+>
 > ```bash
 > sudo bash /var/www/pineapple-social-manager/scripts/fix-permissions.sh
 > ```
 
-### 6.3 Dipendenze, schema e build
+### 6.3 Dependencies, Schema, and Build
 
 ```bash
 cd /var/www/pineapple-social-manager
 
 npm ci
-npm run db:push        # crea le tabelle MySQL
-npm run db:seed        # dati iniziali (opzionale)
+npm run db:push        # creates MySQL tables
+npm run db:seed        # initial data (optional)
 npm run build
 ```
 
-### 6.4 Avvio in produzione
+### 6.4 Production Startup
 
 ```bash
 npm run start
-# L'app sarà disponibile su http://localhost:3010
+# The application will be available at http://localhost:3010
 ```
 
-### 6.5 Avvio automatico con PM2
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 6.5 Automatic Startup with PM2
 
 ```bash
-# Installa PM2 globalmente
+# Install PM2 globally
 sudo npm install -g pm2
 
-# Avvia l'app
+# Start the application
 pm2 start npm --name "pineapple-social-manager" -- start
 
-# Salva la config e abilita l'avvio automatico al boot
+# Save the configuration and enable automatic startup at boot
 pm2 save
 pm2 startup systemd
-# Esegui il comando che PM2 stampa a schermo (sudo env PATH=...)
+# Execute the command that PM2 prints on screen (sudo env PATH=...)
 
-# Comandi utili
-pm2 logs pineapple-social-manager      # log in tempo reale
-pm2 restart pineapple-social-manager   # riavvio
+# Useful commands
+pm2 logs pineapple-social-manager      # real-time logs
+pm2 restart pineapple-social-manager   # restart
 pm2 stop pineapple-social-manager      # stop
-pm2 status                             # stato di tutti i processi
+pm2 status                             # status of all processes
 ```
 
-### 6.6 Modalità sviluppo
+### 6.6 Development Mode
 
 ```bash
 npm run dev
 # http://localhost:3010
 ```
 
-> Sia in sviluppo che in produzione la porta è `3010` (come da `package.json`). Può essere sovrascritta con la variabile `PORT`.
+> Both development and production environments use port `3010` (as configured in `package.json`). It can be overridden using the `PORT` environment variable.
 
-### 6.7 Diagnostica permessi (media non salvati)
+### 6.7 Permissions Diagnostics (Media Not Being Saved)
 
-Se la generazione media (estrai foto, estrai video, AI, ecc.) non salva i file, segui questa diagnostica:
+If media generation (photo extraction, video extraction, AI processing, etc.) does not save files correctly, follow this diagnostic procedure.
 
-#### A — Verifica l'utente con cui gira PM2
+#### A — Verify the User Running PM2
 
 ```bash
 pm2 info pineapple-social-manager | grep user
-# Deve mostrare: pineapple
-# Se mostra root o un altro utente, l'app scrive in un percorso errato
+# Must show: pineapple
+# If it shows root or another user, the app may be writing to the wrong path
 ```
 
-#### B — Verifica che le cartelle uploads esistano
+#### B — Verify That Upload Directories Exist
 
 ```bash
 ls -la /var/www/pineapple-social-manager/public/
-# Deve mostrare uploads/ e watermark-removed/ di proprietà di pineapple
+# Must show uploads/ and watermark-removed/ owned by pineapple
 ```
 
-Se le cartelle non esistono o hanno proprietà errata, esegui lo script di fix:
+If the directories do not exist or have incorrect ownership, run the fix script:
 
 ```bash
 sudo bash /var/www/pineapple-social-manager/scripts/fix-permissions.sh
 ```
 
-#### C — Test di scrittura manuale
+#### C — Manual Write Test
 
 ```bash
-# Testa che l'utente pineapple possa scrivere nelle cartelle
+# Test whether the pineapple user can write to the directories
 sudo -u pineapple touch /var/www/pineapple-social-manager/public/uploads/test.txt
-# Se non dà errori → i permessi sono corretti
+
+# If no errors occur → permissions are correct
 sudo rm /var/www/pineapple-social-manager/public/uploads/test.txt
 ```
 
-#### D — Controlla i log dell'app per errori filesystem
+#### D — Check Application Logs for Filesystem Errors
 
 ```bash
 pm2 logs pineapple-social-manager --lines 200 | grep -i "EACCES\|ENOENT\|permission\|Error"
 ```
 
-Errori comuni e soluzione:
-| Errore | Causa | Soluzione |
-|---|---|---|
-| `EACCES: permission denied` | L'utente app non ha accesso in scrittura | `sudo bash scripts/fix-permissions.sh` |
-| `ENOENT: no such file or directory` | La cartella `public/uploads` non esiste | Stessa soluzione sopra |
-| File generati ma non visibili | PM2 avviato come `root`, scrive in `/root/...` | Riavvia PM2 come `pineapple`, poi fix permissions |
+Common errors and solutions:
 
-#### E — Riavvio PM2 con utente corretto
+| Error                               | Cause                                            | Solution                                         |
+| ----------------------------------- | ------------------------------------------------ | ------------------------------------------------ |
+| `EACCES: permission denied`         | Application user lacks write permissions         | `sudo bash scripts/fix-permissions.sh`           |
+| `ENOENT: no such file or directory` | `public/uploads` directory does not exist        | Same solution as above                           |
+| Files generated but not visible     | PM2 started as `root`, writing under `/root/...` | Restart PM2 as `pineapple`, then fix permissions |
+
+#### E — Restart PM2 with the Correct User
 
 ```bash
-# Se PM2 gira come root ma deve girare come pineapple:
+# If PM2 is running as root but should run as pineapple:
 pm2 delete pineapple-social-manager
-sudo -u pineapple pm2 start npm --name "pineapple-social-manager" -- start --cwd /var/www/pineapple-social-manager
+
+sudo -u pineapple pm2 start npm \
+  --name "pineapple-social-manager" \
+  -- start \
+  --cwd /var/www/pineapple-social-manager
+
 sudo -u pineapple pm2 save
 sudo -u pineapple pm2 startup systemd
 ```
 
 ---
 
-## 7. Installazione con Docker
+## 7. Docker Installation
 
-### 7.1 Installa Docker su Ubuntu
+### 7.1 Install Docker on Ubuntu
 
 ```bash
 curl -fsSL https://get.docker.com | sudo sh
@@ -413,16 +474,16 @@ newgrp docker
 docker --version
 ```
 
-### 7.2 Crea il `Dockerfile`
+### 7.2 Create the `Dockerfile`
 
 ```dockerfile
-# ── Stage 1: dipendenze ────────────────────────
+# ── Stage 1: Dependencies ────────────────────────
 FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
-# ── Stage 2: build ─────────────────────────────
+# ── Stage 2: Build ───────────────────────────────
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
@@ -430,15 +491,16 @@ COPY . .
 RUN npx prisma generate
 RUN npm run build
 
-# ── Stage 3: runtime ───────────────────────────
+# ── Stage 3: Runtime ─────────────────────────────
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
-# ffmpeg richiesto per la generazione e processing video
+# FFmpeg required for video generation and processing
 RUN apk add --no-cache ffmpeg
 
-RUN addgroup --system --gid 1001 nodejs &&     adduser --system --uid 1001 nextjs
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
@@ -446,18 +508,21 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
-RUN mkdir -p public/uploads public/watermark-removed &&     chown -R nextjs:nodejs public
+RUN mkdir -p public/uploads public/watermark-removed && \
+    chown -R nextjs:nodejs public
 
 USER nextjs
+
 EXPOSE 3010
 ENV PORT=3010
 ENV HOSTNAME="0.0.0.0"
+
 CMD ["node", "server.js"]
 ```
 
-### 7.3 Crea il `.dockerignore`
+### 7.3 Create the `.dockerignore`
 
-```
+```text
 node_modules
 .next
 .git
@@ -467,38 +532,45 @@ public/uploads
 public/watermark-removed
 ```
 
-### 7.4 Build e run manuale
+### 7.4 Manual Build and Run
 
 ```bash
-# Build dell'immagine
+# Build the image
 docker build -t pineapple-social-manager:latest .
 
-# Avvio del container
-docker run -d   --name pineapple-social-manager   --restart unless-stopped   -p 3010:3010   --env-file .env.local   -v /var/data/psm/uploads:/app/public/uploads   -v /var/data/psm/watermark-removed:/app/public/watermark-removed   pineapple-social-manager:latest
+# Start the container
+docker run -d \
+  --name pineapple-social-manager \
+  --restart unless-stopped \
+  -p 3010:3010 \
+  --env-file .env.local \
+  -v /var/data/psm/uploads:/app/public/uploads \
+  -v /var/data/psm/watermark-removed:/app/public/watermark-removed \
+  pineapple-social-manager:latest
 
-# Log
+# Logs
 docker logs -f pineapple-social-manager
 
-# Stop e rimozione
+# Stop and remove
 docker stop pineapple-social-manager && docker rm pineapple-social-manager
 ```
 
-> ⚠️ Monta sempre i volumi per `uploads` e `watermark-removed`: i file generati/caricati devono persistere tra i riavvii del container.
+> ⚠️ Always mount volumes for `uploads` and `watermark-removed`: uploaded and generated files must persist across container restarts.
 
 ---
 
-## 8. Installazione con Docker Compose (consigliata)
+## 8. Docker Compose Installation (Recommended)
 
-Questa modalità include **MySQL** nel compose, ideale per installazioni on-premise del cliente.
+This deployment mode includes **MySQL** inside the Compose stack and is ideal for customer on-premise installations.
 
-### 8.1 Installa Docker Compose
+### 8.1 Install Docker Compose
 
 ```bash
 sudo apt install -y docker-compose-plugin
 docker compose version
 ```
 
-### 8.2 Crea `docker-compose.yml`
+### 8.2 Create `docker-compose.yml`
 
 ```yaml
 version: "3.9"
@@ -509,10 +581,10 @@ services:
     container_name: pineapple-mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root_password_cambiami
+      MYSQL_ROOT_PASSWORD: change_me_root_password
       MYSQL_DATABASE: pineapple_social_manager
       MYSQL_USER: pineapple_social_manager
-      MYSQL_PASSWORD: password_cambiami
+      MYSQL_PASSWORD: change_me_password
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
@@ -539,7 +611,7 @@ services:
       - uploads_data:/app/public/uploads
       - watermark_data:/app/public/watermark-removed
 
-  # Nginx reverse proxy (opzionale ma consigliato)
+  # Nginx reverse proxy (optional but recommended)
   nginx:
     image: nginx:alpine
     container_name: nginx-proxy
@@ -559,42 +631,44 @@ volumes:
   watermark_data:
 ```
 
-In `.env.local` usa il nome del servizio Docker (`mysql`) come host:
+In `.env.local`, use the Docker service name (`mysql`) as the database host:
 
 ```env
-DATABASE_URL="mysql://pineapple_social_manager:password_cambiami@mysql:3306/pineapple_social_manager"
+DATABASE_URL="mysql://pineapple_social_manager:change_me_password@mysql:3306/pineapple_social_manager"
 ```
 
-### 8.3 Primo avvio
+### 8.3 First Startup
 
 ```bash
-# Build + avvio
+# Build and start
 docker compose up -d --build
 
-# Inizializza lo schema nel database (solo al primo avvio)
+# Initialize database schema (first startup only)
 docker compose exec app npx prisma db push
 
-# Dati iniziali (opzionale)
+# Seed initial data (optional)
 docker compose exec app npx prisma db seed
 
-# Log in tempo reale
+# Real-time logs
 docker compose logs -f app
 ```
 
-### 8.4 Comandi Docker Compose
+### 8.4 Docker Compose Commands
 
 ```bash
-# Stop
+# Stop services
 docker compose down
 
-# Rebuild dopo aggiornamenti del codice
+# Rebuild after code updates
 docker compose up -d --build --force-recreate
 
-# Stato dei container
+# Show container status
 docker compose ps
 
-# Accesso shell MySQL
-docker compose exec mysql mysql -u pineapple_social_manager -p pineapple_social_manager
+# Open MySQL shell
+docker compose exec mysql mysql \
+  -u pineapple_social_manager \
+  -p pineapple_social_manager
 ```
 
 ---
@@ -608,12 +682,12 @@ sudo apt install -y nginx
 sudo nano /etc/nginx/sites-available/pineapple-social-manager
 ```
 
-### Configurazione Nginx
+### Nginx Configuration
 
 ```nginx
 server {
     listen 80;
-    server_name social.tuodominio.it;
+    server_name social.yourdomain.com;
 
     # Decommentare dopo aver configurato SSL con Certbot:
     # return 301 https://$host$request_uri;
@@ -659,7 +733,7 @@ server {
 
 > ⚠️ `client_max_body_size 500M` è importante: la media library e il generatore video gestiscono file pesanti.
 
-### Abilita e riavvia
+### Enable and restart
 
 ```bash
 sudo ln -s /etc/nginx/sites-available/pineapple-social-manager /etc/nginx/sites-enabled/
@@ -667,7 +741,7 @@ sudo nginx -t
 sudo systemctl restart nginx && sudo systemctl enable nginx
 ```
 
-### Configurazione Nginx per Docker Compose (`nginx/nginx.conf`)
+### Nginx Configuration for Docker Compose (`nginx/nginx.conf`)
 
 ```nginx
 upstream pineapple_app {
@@ -713,45 +787,45 @@ server {
 
 ---
 
-## 10. Certificato SSL con Certbot
+## 10. SSL Certificate with Certbot
 
 ```bash
-# Installa Certbot
+# Install Certbot
 sudo apt install -y certbot python3-certbot-nginx
 
-# Ottieni il certificato (sostituisci con il tuo dominio)
+# Get the certificate (replace with your domain)
 sudo certbot --nginx -d social.tuodominio.it
 
-# Verifica il rinnovo automatico
+# Verify automatic renewal
 sudo certbot renew --dry-run
 ```
 
-Certbot aggiorna automaticamente la config Nginx con il redirect HTTPS.
+Certbot automatically updates the Nginx config with the HTTPS redirect.
 
 ---
 
-## 11. Variabili d'ambiente — riferimento completo
+## 11. Environment Variables — complete reference
 
 | Variabile | Tipo | Obbligatoria | Descrizione |
 |---|---|---|---|
-| `DATABASE_URL` | `string` | ✅ | Connection string MySQL. Formato: `mysql://user:pass@host:3306/dbname`. Caratteri speciali nella password vanno URL-encoded (`@`→`%40`, `+`→`%2B`, `#`→`%23`). |
-| `AUTH_SECRET` | `string` | ✅ | Chiave segreta per la firma dei JWT di sessione. Minimo 32 caratteri casuali. |
-| `MASTER_EMAIL` | `string` | ✅ | Email dell'account amministratore master (creato al primo `db:seed`). |
-| `MASTER_PASSWORD` | `string` | ✅ | Password dell'account amministratore master. |
-| `TZ` | `string` | No | Timezone del server (default: `Europe/Rome`). Usato dallo scheduler e dalle date. |
+| `DATABASE_URL` | `string` | ✅ | Connection string MySQL. Format: `mysql://user:pass@host:3306/dbname`. Special characters in the password must be URL-encoded (`@`→`%40`, `+`→`%2B`, `#`→`%23`). |
+| `AUTH_SECRET` | `string` | ✅ | Secret key for signing session JWTs[cite: 5]. Minimum 32 random characters. |
+| `MASTER_EMAIL` | `string` | ✅ | Email of the master administrator account (created at the first `db:seed`). |
+| `MASTER_PASSWORD` | `string` | ✅ | Password of the master administrator account. |
+| `TZ` | `string` | No | Server timezone (default: `Europe/Rome`). Used by the scheduler and dates. |
 
-> **Nota:** le chiavi API per i provider AI (OpenAI, Anthropic, Google Gemini), gli access token di Instagram / Facebook / TikTok e le configurazioni per tenant si impostano **dalla UI** → *Impostazioni → Provider AI* / *Account Social* e vengono salvate nel database, non nelle variabili d'ambiente.
+> **Note:** access tokens for Instagram / Facebook / TikTok, and tenant configurations are set **from the UI** → *Settings → AI Providers* / *Social Accounts* and are saved in the database, not in the environment variables.
 
 ---
 
-## 12. Aggiornamenti
+## 12. Updates
 
-### 12.1 Aggiornamento nativo su Ubuntu + PM2
+### 12.1 Native update on Ubuntu + PM2
 
-Assunzioni:
-- path progetto: `/var/www/pineapple-social-manager`
-- processo PM2: `pineapple-social-manager`
-- branch deploy: `main`
+Assumptions:
+- project path: `/var/www/pineapple-social-manager`
+- PM2 process: `pineapple-social-manager`
+- deploy branch: `main`
 
 #### Step A — Pre-check
 
@@ -762,7 +836,7 @@ git status
 git rev-parse --short HEAD
 ```
 
-#### Step B — Aggiornamento codice + dipendenze + build
+#### Step B — Code + dependencies + build update
 
 ```bash
 cd /var/www/pineapple-social-manager
@@ -771,36 +845,36 @@ git fetch origin
 git checkout main
 git pull --ff-only origin main
 
-# Installa dipendenze in modo pulito
+# Install dependencies cleanly
 npm ci
 
-# Applica eventuali nuove migration al DB
+# Apply any new migrations to the DB
 npm run db:migrate
 
-# Build produzione
+# Production build
 npm run build
 ```
 
-> Se ci sono nuove variabili d'ambiente, aggiorna `.env.local` prima di `npm run build`.
+> If there are new environment variables, update `.env.local` before `npm run build`.
 
-#### Step C — Riavvio zero-downtime con PM2
+#### Step C — Zero-downtime restart with PM2
 
 ```bash
 pm2 reload pineapple-social-manager || pm2 restart pineapple-social-manager
 pm2 save
 ```
 
-#### Step D — Ripristina permessi cartelle runtime
+#### Step D — Restore runtime folders permissions
 
-> ⚠️ Dopo ogni `git pull` + `npm run build` è **obbligatorio** rieseguire questo step,
-> perché la build può modificare la proprietà di alcune cartelle e `public/` non è in Git,
-> quindi non viene ricreata automaticamente.
+> ⚠️ After every `git pull` + `npm run build` it is **mandatory** to re-run this step,
+> because the build can modify the ownership of some folders and `public/` is not in Git,
+> so it is not recreated automatically.
 
 ```bash
 sudo bash /var/www/pineapple-social-manager/scripts/fix-permissions.sh
 ```
 
-#### Step E — Verifica post-deploy
+#### Step E — Post-deploy check
 
 ```bash
 pm2 status
@@ -809,7 +883,7 @@ ss -ltnp | grep 3010
 curl -I http://127.0.0.1:3010
 ```
 
-### 12.2 Rollback rapido
+### 12.2 Quick Rollback
 
 ```bash
 cd /var/www/pineapple-social-manager
@@ -821,7 +895,7 @@ pm2 restart pineapple-social-manager
 pm2 save
 ```
 
-### 12.3 Aggiornamento Docker Compose
+### 12.3 Docker Compose Update
 
 ```bash
 git pull origin main
@@ -831,7 +905,7 @@ docker compose up -d --build --force-recreate
 docker compose exec app npx prisma migrate deploy
 ```
 
-### 12.4 Pulizia immagini Docker inutilizzate
+### 12.4 Clean up unused Docker images
 
 ```bash
 docker image prune -f
@@ -839,14 +913,14 @@ docker image prune -f
 
 ---
 
-## 13. Stack tecnico
+## 13. Technical Stack
 
 | Layer | Tecnologia |
 |---|---|
 | Framework | Next.js 15 (App Router, SSR, API Routes) |
-| Linguaggio | TypeScript 5 |
+| Language | TypeScript 5 |
 | Styling | Tailwind CSS 3 |
-| Animazioni | Framer Motion 11 |
+| Animations | Framer Motion 11 |
 | ORM | Prisma 5 |
 | Database | MySQL 8 / MariaDB 10.6+ |
 | AI — Testo | OpenAI GPT-4o, Anthropic Claude 3.5, Google Gemini 2.0 |
@@ -864,37 +938,31 @@ docker image prune -f
 
 ## 14. Licenza e Supporto
 
-Questo software è distribuito sotto licenza **Pineapple Open-Source License (Basata su BSL/Dual-License)**:
-- **✅ Gratuito per l'uso:** Puoi scaricare, installare e utilizzare il software gratuitamente per gestire i tuoi social o quelli della tua agenzia.
-- **✅ Modifiche (con consenso):** I contributi e le PR sono benvenuti! Le modifiche migliorative della piattaforma possono essere usate previa approvazione della community o dell'autore.
-- **❌ Divieto di Rivendita Commerciale (SaaS):** Non è consentito prendere questo codice sorgente, brandizzarlo e rivenderlo come servizio SaaS (Software-as-a-Service) commerciale a terzi senza una licenza commerciale esplicita.
+This software is distributed under the **Pineapple Open-Source License (Based on BSL/Dual-License)**:
+- **✅ Free to use:** You can download, install and use the software for free to manage your socials or those of your agency.
+- **✅ Modifications (with consent):** Contributions and PRs are welcome![cite: 5] Platform improvement modifications can be used prior to approval by the community or the author.
+- **❌ Prohibition of Commercial Resale (SaaS):** It is not allowed to take this source code, brand it and resell it as a commercial SaaS (Software-as-a-Service) service to third parties without an explicit commercial license.
 
-Se hai bisogno di **supporto premium, installazione dedicata o una licenza commerciale** per rivendere la piattaforma white-label, contattaci. 
+If you need **premium support, dedicated installation or a commercial license** to resell the platform white-label, contact us. 
 
-🍍 **Sostieni il Progetto:** Se questa piattaforma ti aiuta a scalare il tuo business, considera l'idea di fare una donazione per supportare lo sviluppo! 
+🍍 **Support the Project:** If this platform helps you scale your business, consider making a donation to support the development! 
 
 ---
 
 
-## ⚠️ Limitazioni, Stato dello Sviluppo e Responsabilità
+## ⚠️ Limitations, Development Status and Liability
 
-### 🛠️ Funzionalità Non Ancora Sviluppate (In Arrivo)
-Si prega di notare che il progetto è in fase di sviluppo attivo. Le seguenti funzionalità, sebbene documentate o visibili nell'interfaccia, **non sono ancora state implementate** e verranno rilasciate nelle prossime versioni:
+### 🛠️ Features Not Yet Developed (Coming Soon)
+Please note that the project is in active development[cite: 5]. The following features, although documented or visible in the interface, **have not yet been implemented** and will be released in future versions:
 
-* **Piani e Fatturazione (Multi-tenancy):** La gestione dei piani (Free, Pro, Agency), i limiti di token/job associati ai piani e la logica di limitazione dei tenant non sono ancora operativi.
-* **Ruoli e Permessi Utente:** Il sistema di controllo degli accessi basato su ruoli (`Admin`, `Editor`, `Viewer`) per i dipendenti e i sotto-tenant non è attualmente attivo; tutti gli utenti accedono con privilegi amministrativi sul tenant.
-* **Test e Integrazione Provider AI:** È necessario completare i test operativi e validare l'integrazione completa per i provider **Anthropic** e **OpenAI**.
-* **Provider AI Video (Google VEO):** La generazione video tramite Google VEO, la creazione automatica dello storyboard, l'unione delle clip e il sistema di Text-to-Speech (TTS) continuo sono in fase di sviluppo e non utilizzabili.
-* **Automazione Schedulazione (Siti Collegati):** L'estrazione automatica dei contenuti dai siti web per l'analisi del "Tono di Voce", il caricamento automatico delle regole e la pianificazione guidata tramite AI non sono ancora funzionanti.
-* **Sezione Campagne:** Il raggruppamento dei post in campagne con date di inizio/fine e la generazione automatica di un'intera pianificazione editoriale tramite AI non sono ancora implementati.
-* **Sincronizzazione Automatizzata Analytics:** La sincronizzazione automatica dei dati statistici tramite CRON personalizzato o schedulato non è attiva; i dati metrici non vengono popolati.
-* **Rimozione Filigrana (Watermark):** La funzionalità di rimozione automatica della filigrana dai media non è al momento disponibile.
-* **Supporto Multi-lingua:** L'interfaccia e il sistema sono attualmente disponibili **esclusivamente in lingua Italiana**. Il supporto per l'internazionalizzazione (i18n) e la localizzazione in altre lingue verrà aggiunto in futuro.
+* **AI Provider Testing and Integration:** It is necessary to complete operational tests and validate full integration for **Anthropic** and **OpenAI**.
+* **Campaigns Section:** Grouping posts into campaigns with start/end dates and automatically generating an entire editorial plan via AI have not been completed
+* **Multi-language Support:** The interface and system are currently available **exclusively in Italian**. Support for internationalization (i18n) and localization into other languages will be added in the future.
 
-### 🛑 Esclusione di Responsabilità (Disclaimer)
-Questo software viene fornito "così com'è", senza garanzie di alcun tipo, espresse o implicite.
+### 🛑 Disclaimer of Liability (Disclaimer)
+This software is provided "as is", without warranties of any kind, express or implied
 
-* L'autore (Giovanni Buglione) e *Pineapple Solutions di Buglione Giovanni* **non si assumono alcuna responsabilità** per l'uso improprio o illegale del programma, né per eventuali violazioni dei Termini di Servizio delle piattaforme social (Meta/Facebook, Instagram, TikTok) causate dall'uso di automatismi, scraping o pubblicazione massiva.
-* L'utente è l'unico responsabile della custodia delle API Key dei provider AI (OpenAI, Anthropic, Google) e dei costi da esse derivanti, nonché della gestione e della sicurezza dei dati dei propri clienti (tenant).
+* The author (Giovanni Buglione) and *Pineapple Solutions di Buglione Giovanni* **assume no responsibility** for the improper or illegal use of the program, nor for any violations of the Terms of Service of the social platforms (Meta/Facebook, Instagram, TikTok) caused by the use of automations, scraping or massive publishing.
+* The user is solely responsible for the safekeeping of the AI provider API Keys (OpenAI, Anthropic, Google) and the costs deriving from them, as well as the management and security of their clients' (tenants) data.
 
 *Pineapple IT Solutions di Buglione Giovanni — [pineapplesolutions.it](https://pineapplesolutions.it)*

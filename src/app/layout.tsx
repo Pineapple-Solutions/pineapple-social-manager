@@ -3,6 +3,10 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { AppShell } from '@/components/layout/AppShell';
 import { ToastProvider } from '@/components/ui/ToastProvider';
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   title: 'Pineapple Social Manager',
@@ -25,7 +29,7 @@ const themeScript = `
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="it" suppressHydrationWarning>
+    <html lang="it" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
       <head>
         {/* Anti-flash: applica il tema prima del primo paint */}
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />

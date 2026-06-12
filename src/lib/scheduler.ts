@@ -1123,7 +1123,7 @@ async function executeGenerationJob(job: { id: string; type: string; tenantId: s
     // Durata richiesta dall'utente (può essere fino a 60s — stitching gestirà i clip da 4-8s)
     const rawDuration = typeof p.duration === 'number' ? p.duration : (parseInt(String(p.duration ?? '5'), 10) || 5);
     // Per lo stitching usiamo la durata raw; per singola clip la clamp al range del modello
-    const { min: dMin, max: dMax } = getVeoDurationRange(videoProvider.videoModel);
+    const { min: dMin, max: dMax } = getVeoDurationRange(videoProvider.videoModel ?? '');
     const safeDuration = Math.max(dMin, Math.min(dMax, Math.round(rawDuration)));
     if (!needsStitching(rawDuration) && safeDuration !== rawDuration) {
       console.warn(`[Queue VIDEO] duration ${rawDuration}s fuori range [${dMin}-${dMax}] per "${videoProvider.videoModel}" → clampato a ${safeDuration}s`);
@@ -1321,7 +1321,7 @@ async function executeGenerationJob(job: { id: string; type: string; tenantId: s
         try {
           operationName = await startGoogleVeoOperation(
             videoProvider.apiKey,
-            videoProvider.videoModel,
+            videoProvider.videoModel ?? '',
             clipPromptToUse,
             canResume ? (stitching.aspectRatio ?? safeAspectRatio) : safeAspectRatio,
             stitching.clips[startClipIdx].duration,
@@ -1334,7 +1334,7 @@ async function executeGenerationJob(job: { id: string; type: string; tenantId: s
             console.warn(`[Queue VIDEO] Clip ${startClipIdx}: immagine di riferimento contiene persone → retry text-to-video`);
             operationName = await startGoogleVeoOperation(
               videoProvider.apiKey,
-              videoProvider.videoModel,
+              videoProvider.videoModel ?? '',
               clipPromptToUse,
               canResume ? (stitching.aspectRatio ?? safeAspectRatio) : safeAspectRatio,
               stitching.clips[startClipIdx].duration,
@@ -1416,7 +1416,7 @@ async function executeGenerationJob(job: { id: string; type: string; tenantId: s
       try {
         operationName = await startGoogleVeoOperation(
           videoProvider.apiKey,
-          videoProvider.videoModel,
+          videoProvider.videoModel ?? '',
           singleClipPrompt,    // prompt arricchito con storyboard
           safeAspectRatio,
           safeDuration,        // durata clampata al range del modello
@@ -1429,7 +1429,7 @@ async function executeGenerationJob(job: { id: string; type: string; tenantId: s
           console.warn('[Queue VIDEO] Singola clip: immagine di riferimento contiene persone → retry text-to-video');
           operationName = await startGoogleVeoOperation(
             videoProvider.apiKey,
-            videoProvider.videoModel,
+            videoProvider.videoModel ?? '',
             singleClipPrompt,
             safeAspectRatio,
             safeDuration,

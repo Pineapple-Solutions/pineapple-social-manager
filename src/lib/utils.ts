@@ -1,151 +1,123 @@
-// src/lib/utils.ts
-
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs))
 }
 
-export function formatDate(date: Date | string | null | undefined, options?: Intl.DateTimeFormatOptions): string {
-  if (!date) return '—';
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toLocaleDateString('it-IT', {
-    day: '2-digit', month: '2-digit', year: 'numeric',
-    ...options,
-  });
+// ─── Formattazione numeri ────────────────────────────────────────────────────
+export function formatNumber(n: number | undefined | null): string {
+  if (n == null) return '0';
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
+  return n.toString();
 }
 
-export function formatDateTime(date: Date | string | null | undefined): string {
+// ─── Formattazione date ──────────────────────────────────────────────────────
+export function formatDate(date: string | Date | null | undefined): string {
   if (!date) return '—';
   const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toLocaleString('it-IT', {
-    day: '2-digit', month: '2-digit', year: 'numeric',
-    hour: '2-digit', minute: '2-digit',
-  });
+  if (isNaN(d.getTime())) return '—';
+  return d.toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
-export function formatRelativeTime(date: Date | string | null | undefined): string {
+export function formatDateTime(date: string | Date | null | undefined): string {
   if (!date) return '—';
   const d = typeof date === 'string' ? new Date(date) : date;
-  const now = new Date();
-  const diff = now.getTime() - d.getTime();
-  const seconds = Math.floor(diff / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
+  if (isNaN(d.getTime())) return '—';
+  return d.toLocaleString('it-IT', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
 
-  if (diff < 0) {
-    const absDays = Math.abs(days);
-    const absHours = Math.abs(hours);
-    const absMinutes = Math.abs(minutes);
-    if (absMinutes < 60) return `tra ${absMinutes}m`;
-    if (absHours < 24) return `tra ${absHours}h`;
-    return `tra ${absDays}gg`;
-  }
-
-  if (seconds < 60) return 'adesso';
-  if (minutes < 60) return `${minutes}m fa`;
-  if (hours < 24) return `${hours}h fa`;
-  if (days < 7) return `${days}gg fa`;
+export function formatRelativeTime(date: string | Date | null | undefined): string {
+  if (!date) return '—';
+  const d = typeof date === 'string' ? new Date(date) : date;
+  if (isNaN(d.getTime())) return '—';
+  const now = Date.now();
+  const diff = now - d.getTime();
+  const abs = Math.abs(diff);
+  const future = diff < 0;
+  const mins = Math.floor(abs / 60_000);
+  const hours = Math.floor(abs / 3_600_000);
+  const days = Math.floor(abs / 86_400_000);
+  if (mins < 1) return future ? 'tra poco' : 'adesso';
+  if (mins < 60) return future ? `tra ${mins}m` : `${mins}m fa`;
+  if (hours < 24) return future ? `tra ${hours}h` : `${hours}h fa`;
+  if (days < 30) return future ? `tra ${days}gg` : `${days}gg fa`;
   return formatDate(d);
 }
 
-export function truncate(str: string, length: number): string {
-  if (str.length <= length) return str;
-  return str.slice(0, length) + '…';
+// ─── Platform helpers ────────────────────────────────────────────────────────
+export function getPlatformLabel(platform: string | null | undefined): string {
+  switch ((platform ?? '').toUpperCase()) {
+    case 'INSTAGRAM': return 'Instagram';
+    case 'FACEBOOK':  return 'Facebook';
+    case 'TIKTOK':    return 'TikTok';
+    default:          return platform ?? 'Sconosciuta';
+  }
 }
 
-export function getStatusColor(status: string): string {
-  const map: Record<string, string> = {
-    DRAFT: 'text-gray-400 bg-gray-400/10',
-    SCHEDULED: 'text-blue-400 bg-blue-400/10',
-    PUBLISHING: 'text-yellow-400 bg-yellow-400/10',
-    PUBLISHED: 'text-green-400 bg-green-400/10',
-    FAILED: 'text-red-400 bg-red-400/10',
-    CANCELLED: 'text-gray-500 bg-gray-500/10',
-  };
-  return map[status] ?? 'text-gray-400 bg-gray-400/10';
+export function getPlatformIcon(platform: string | null | undefined): string {
+  switch ((platform ?? '').toUpperCase()) {
+    case 'INSTAGRAM': return '📸';
+    case 'FACEBOOK':  return '🔵';
+    case 'TIKTOK':    return '🎵';
+    default:          return '🌐';
+  }
 }
 
-export function getStatusLabel(status: string): string {
-  const map: Record<string, string> = {
-    DRAFT: 'Bozza',
-    SCHEDULED: 'Schedulato',
-    PUBLISHING: 'In pubblicazione...',
-    PUBLISHED: 'Pubblicato',
-    FAILED: 'Errore',
-    CANCELLED: 'Annullato',
-  };
-  return map[status] ?? status;
+export function getPlatformBadgeColor(platform: string | null | undefined): string {
+  switch ((platform ?? '').toUpperCase()) {
+    case 'INSTAGRAM': return 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-300';
+    case 'FACEBOOK':  return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300';
+    case 'TIKTOK':    return 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300';
+    default:          return 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400';
+  }
 }
 
-export function getTypeIcon(type: string): string {
-  const map: Record<string, string> = {
-    POST: '🖼️',
-    STORY: '📱',
-    REEL: '🎬',
-    CAROUSEL: '🎠',
-  };
-  return map[type] ?? '📄';
+// ─── Post type helpers ───────────────────────────────────────────────────────
+export function getTypeLabel(type: string | null | undefined): string {
+  switch ((type ?? '').toUpperCase()) {
+    case 'POST':      return 'Post';
+    case 'STORY':     return 'Story';
+    case 'REEL':      return 'Reel';
+    case 'CAROUSEL':  return 'Carosello';
+    default:          return type ?? 'Sconosciuto';
+  }
 }
 
-export function getTypeLabel(type: string): string {
-  const map: Record<string, string> = {
-    POST: 'Post',
-    STORY: 'Storia',
-    REEL: 'Reel',
-    CAROUSEL: 'Carousel',
-  };
-  return map[type] ?? type;
+export function getTypeIcon(type: string | null | undefined): string {
+  switch ((type ?? '').toUpperCase()) {
+    case 'POST':      return '🖼️';
+    case 'STORY':     return '⏱️';
+    case 'REEL':      return '🎬';
+    case 'CAROUSEL':  return '🎠';
+    default:          return '📄';
+  }
 }
 
-export function formatNumber(n: number): string {
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
-  return String(n);
+// ─── Post status helpers ─────────────────────────────────────────────────────
+export function getStatusLabel(status: string | null | undefined): string {
+  switch ((status ?? '').toUpperCase()) {
+    case 'DRAFT':      return 'Bozza';
+    case 'SCHEDULED':  return 'Pianificato';
+    case 'PUBLISHING': return 'In pubblicazione';
+    case 'PUBLISHED':  return 'Pubblicato';
+    case 'FAILED':     return 'Fallito';
+    case 'CANCELLED':  return 'Annullato';
+    case 'ARCHIVED':   return 'Archiviato';
+    default:           return status ?? 'Sconosciuto';
+  }
 }
 
-export function maskToken(token: string): string {
-  if (!token || token.length < 8) return '••••••••';
-  return token.slice(0, 6) + '••••••••' + token.slice(-4);
+export function getStatusColor(status: string | null | undefined): string {
+  switch ((status ?? '').toUpperCase()) {
+    case 'DRAFT':      return 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400';
+    case 'SCHEDULED':  return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300';
+    case 'PUBLISHING': return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300';
+    case 'PUBLISHED':  return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300';
+    case 'FAILED':     return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300';
+    case 'CANCELLED':  return 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-500';
+    case 'ARCHIVED':   return 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300';
+    default:           return 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400';
+  }
 }
-
-// ─── Platform helpers ────────────────────────────────────────────
-
-export function getPlatformIcon(platform: string): string {
-  const map: Record<string, string> = {
-    INSTAGRAM: '📸',
-    FACEBOOK: '🔵',
-    TIKTOK: '🎵',
-  };
-  return map[platform] ?? '📱';
-}
-
-export function getPlatformLabel(platform: string): string {
-  const map: Record<string, string> = {
-    INSTAGRAM: 'Instagram',
-    FACEBOOK: 'Facebook',
-    TIKTOK: 'TikTok',
-  };
-  return map[platform] ?? platform;
-}
-
-export function getPlatformColor(platform: string): string {
-  const map: Record<string, string> = {
-    INSTAGRAM: 'text-pink-400 bg-pink-400/10 border-pink-400/30',
-    FACEBOOK: 'text-blue-400 bg-blue-400/10 border-blue-400/30',
-    TIKTOK: 'text-cyan-400 bg-cyan-400/10 border-cyan-400/30',
-  };
-  return map[platform] ?? 'text-gray-400 bg-gray-400/10 border-gray-400/30';
-}
-
-export function getPlatformBadgeColor(platform: string): string {
-  const map: Record<string, string> = {
-    INSTAGRAM: 'text-pink-400 bg-pink-500/10',
-    FACEBOOK: 'text-blue-400 bg-blue-500/10',
-    TIKTOK: 'text-cyan-400 bg-cyan-500/10',
-  };
-  return map[platform] ?? 'text-gray-400 bg-gray-400/10';
-}
-
