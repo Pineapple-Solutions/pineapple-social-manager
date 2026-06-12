@@ -16,11 +16,11 @@
 You can test the platform's features using our live demo:
 **Link:** [https://socialmanager.pineapplesolutions.it/](https://socialmanager.pineapplesolutions.it/)
 
-**Master Account (with client management):**
+**Master Account (with customers management):**
 * **Email:** `master@demo.it`
 * **Password:** `password`
 
-**Admin Account (without client management):**
+**Admin Account (without customers management):**
 * **Email:** `demo@demo.it`
 * **Password:** `password`
 
