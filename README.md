@@ -9,6 +9,12 @@
 > Supports AI content generation (OpenAI, Anthropic, Google Gemini), automatic scheduling,
 > publishing to Instagram, Facebook, and TikTok, media library management, analytics, and much more.
 
+## 🌐 Discover More
+
+For a detailed overview of all features, insights into the architecture, and to learn how Pineapple Social Manager can be tailored to fit your workflow, I have set up a dedicated landing page. You will also find all the necessary information to get in touch with me directly.
+
+👉 **[Visit the official Pineapple Social Manager page](https://www.pineapplesolutions.it/social-manager)**
+
 ---
 
 ## 🌐 Live Demo
@@ -23,7 +29,7 @@ You can test the platform's features using our live demo:
 **Admin Account (without customers management):**
 * **Email:** `demo@demo.it`
 * **Password:** `password`
-* 
+*
 
 ---
 
