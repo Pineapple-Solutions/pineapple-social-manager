@@ -16,6 +16,16 @@
 Puoi testare le funzionalità della piattaforma attraverso la nostra live demo:
 **Link:** [https://socialmanager.pineapplesolutions.it/](https://socialmanager.pineapplesolutions.it/)
 
+---
+
+## ☕ Supporta lo Sviluppo
+
+Se questo progetto ti è stato utile e condividi la filosofia di uno sviluppo indipendente, incentrato sulla privacy e costruito "su misura", puoi sostenere il mio lavoro. Ogni caffè offerto mi aiuta a coprire i costi di infrastruttura e a dedicare più tempo alla scrittura di codice libero da logiche commerciali.
+
+<a href="https://buymeacoffee.com/pineapplesolutions" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+
+---
+
 **Master Account (con gestione clienti):**
 * **Email:** `master@demo.it`
 * **Password:** `password`

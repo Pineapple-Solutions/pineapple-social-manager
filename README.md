@@ -23,6 +23,17 @@ You can test the platform's features using our live demo:
 **Admin Account (without customers management):**
 * **Email:** `demo@demo.it`
 * **Password:** `password`
+* 
+
+---
+
+## ☕ Support the Development
+
+If you find this project useful and share the vision of independent, privacy-first, and tailored software development, consider supporting my work. Every coffee helps cover infrastructure costs and allows me to dedicate more time to writing code free from corporate constraints.
+
+<a href="https://buymeacoffee.com/pineapplesolutions" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+
+---
 
 ## 🚀 Main Features and User Guide
 
