@@ -11,6 +11,19 @@
 
 ---
 
+## 🌐 Live Demo
+
+Puoi testare le funzionalità della piattaforma attraverso la nostra live demo:
+**Link:** [https://socialmanager.pineapplesolutions.it/](https://socialmanager.pineapplesolutions.it/)
+
+**Master Account (con gestione clienti):**
+* **Email:** `master@demo.it`
+* **Password:** `password`
+
+**Admin Account (senza gestione clienti):**
+* **Email:** `demo@demo.it`
+* **Password:** `password`
+
 ## 🚀 Funzionalità Principali e Guida all'Uso
 
 Pineapple Social Manager è stato progettato per agenzie, freelance e aziende che vogliono scalare la gestione dei social media sfruttando l'Intelligenza Artificiale. Di seguito il dettaglio di tutte le sezioni e funzionalità della piattaforma, come documentato.
